@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>部活スケジュール管理</title>
+  <?!= include('style.css'); ?>
+</head>
+<body>
+  <div class="container">
+    <!-- ヘッダー -->
+    <header class="header">
+      <h1>🏐 部活スケジュール管理システム</h1>
+      <p class="subtitle">Excelファイルを簡単にGoogleカレンダーに反映</p>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+      <!-- アップロードセクション -->
+      <section class="upload-section">
+        <div class="upload-card">
+          <h2>📄 スケジュールファイルをアップロード</h2>
+          
+          <!-- ファイル選択エリア -->
+          <div class="file-input-area" id="fileInputArea">
+            <input type="file" id="fileInput" accept=".xlsx,.xls,.xlsm" style="display: none;">
+            <div class="file-drop-zone" onclick="document.getElementById('fileInput').click()">
+              <div class="file-icon">📁</div>
+              <p class="file-text">クリックしてファイルを選択</p>
+              <p class="file-hint">対応形式: .xlsx, .xls, .xlsm</p>
+            </div>
+          </div>
+
+          <!-- 選択されたファイル情報 -->
+          <div class="selected-file" id="selectedFile" style="display: none;">
+            <div class="file-info">
+              <span class="file-name" id="fileName">ファイル名</span>
+              <span class="file-size" id="fileSize">ファイルサイズ</span>
+            </div>
+            <button class="remove-file" onclick="removeFile()">✖</button>
+          </div>
+
+          <!-- アップロードボタン -->
+          <div class="button-area">
+            <button class="upload-btn" id="uploadBtn" onclick="uploadFile()" disabled>
+              📤 アップロード & 処理開始
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 結果表示セクション -->
+      <section class="result-section" id="resultSection" style="display: none;">
+        <div class="result-card">
+          <h2>📋 処理結果</h2>
+          <div class="result-content" id="resultContent">
+            <!-- 結果がここに表示されます -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ローディング表示 -->
+      <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <p>処理中です...しばらくお待ちください</p>
+        </div>
+      </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+      <p>&copy; 2025 部活スケジュール管理システム</p>
+    </footer>
+  </div>
+
+  <?!= include('upload.js'); ?>
+</body>
+</html>
