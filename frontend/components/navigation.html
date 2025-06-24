@@ -1,0 +1,27 @@
+<!-- ステップナビゲーション -->
+<nav class="step-nav">
+    <div class="steps">
+        <div class="step <?= stepNumber >= 1 ? 'active' : '' ?> <?= stepNumber > 1 ? 'completed' : '' ?>">
+            <div class="step-number">1</div>
+            <div class="step-label">アップロード</div>
+        </div>
+        <div class="step-connector"></div>
+        
+        <div class="step <?= stepNumber >= 2 ? 'active' : '' ?> <?= stepNumber > 2 ? 'completed' : '' ?>">
+            <div class="step-number">2</div>
+            <div class="step-label">プレビュー</div>
+        </div>
+        <div class="step-connector"></div>
+        
+        <div class="step <?= stepNumber >= 3 ? 'active' : '' ?> <?= stepNumber > 3 ? 'completed' : '' ?>">
+            <div class="step-number">3</div>
+            <div class="step-label">カレンダー</div>
+        </div>
+        <div class="step-connector"></div>
+        
+        <div class="step <?= stepNumber >= 4 ? 'active' : '' ?>">
+            <div class="step-number">4</div>
+            <div class="step-label">完了</div>
+        </div>
+    </div>
+</nav>
