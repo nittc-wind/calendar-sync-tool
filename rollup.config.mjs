@@ -20,10 +20,11 @@ import typescript from 'rollup-plugin-typescript2';
 import { fileURLToPath } from 'url';
 
 export default {
-  input: 'src/index.ts',
+  input: 'src/main.ts',
   output: {
-    dir: 'dist',
-    format: 'esm',
+    file: 'dist/コード.js',
+    format: 'iife',
+    name: 'Main',
   },
   plugins: [
     cleanup({ comments: 'none', extensions: ['.ts'] }),

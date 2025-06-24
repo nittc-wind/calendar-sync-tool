@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部活予定表カレンダー連携システム</title>
+    <?!= include('style.css'); ?>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>部活予定表カレンダー連携システム</h1>
+            <div id="user-info" class="user-info"></div>
+        </header>
+        
+        <main>
+            <section id="upload-section" class="upload-section">
+                <h2>1. ファイルアップロード</h2>
+                <div id="drop-zone" class="drop-zone">
+                    <p>Excelファイルをドラッグ&ドロップ<br>または<br>クリックしてファイルを選択</p>
+                    <input type="file" id="file-input" accept=".xlsx,.xlsm" hidden>
+                </div>
+                <div id="file-info" class="file-info hidden"></div>
+            </section>
+            
+            <section id="preview-section" class="preview-section hidden">
+                <h2>2. データプレビュー</h2>
+                <div id="preview-table"></div>
+            </section>
+            
+            <section id="calendar-section" class="calendar-section hidden">
+                <h2>3. カレンダー選択</h2>
+                <select id="calendar-select" class="calendar-select">
+                    <option value="">カレンダーを選択してください</option>
+                </select>
+            </section>
+            
+            <section id="action-section" class="action-section hidden">
+                <button id="process-button" class="process-button">カレンダーに追加</button>
+            </section>
+            
+            <section id="result-section" class="result-section hidden">
+                <h2>4. 処理結果</h2>
+                <div id="progress-bar" class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div id="result-table"></div>
+            </section>
+        </main>
+    </div>
+    
+    <?!= include('script.js'); ?>
+</body>
+</html>
