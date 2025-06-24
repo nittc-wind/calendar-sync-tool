@@ -1,0 +1,17 @@
+<!-- ヘッダーコンポーネント -->
+<header class="app-header">
+    <div class="header-content">
+        <h1 class="app-title">
+            <span class="app-icon">📅</span>
+            部活予定表システム
+        </h1>
+        <div class="user-info">
+            <span class="user-name" id="user-name">
+                <?= currentUser.name || 'ゲスト' ?>
+            </span>
+            <span class="user-email" id="user-email">
+                <?= currentUser.email || '' ?>
+            </span>
+        </div>
+    </div>
+</header>

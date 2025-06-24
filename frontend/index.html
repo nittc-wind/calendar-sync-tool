@@ -3,127 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>部活予定表システム</title>
+    <title><?= pageTitle ?> - 部活予定表システム</title>
     <style>
-        body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .status {
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-        .success {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-        }
-        .loading {
-            background-color: #d1ecf1;
-            border: 1px solid #bee5eb;
-            color: #0c5460;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 10px 5px;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        #result {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-height: 50px;
-        }
+        <?!= include('style.css.html'); ?>
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>部活予定表カレンダー連携システム</h1>
+    <div class="app-container">
+        <!-- ヘッダー部分 -->
+        <?!= include('components/header.html'); ?>
         
-        <div class="status success">
-            ✅ システムが正常に起動しました
-        </div>
+        <!-- ナビゲーション部分 -->
+        <?!= include('components/navigation.html'); ?>
         
-        <div class="status loading" id="status">
-            🔄 初期化中...
-        </div>
+        <!-- メインコンテンツ部分 -->
+        <main class="main-content">
+            <!-- 各画面のコンテンツがここに挿入される -->
+            <?!= include('pages/' + pageType + '.html'); ?>
+        </main>
         
-        <div>
-            <h2>接続テスト</h2>
-            <button onclick="testConnection()">GAS接続テスト</button>
-            <button onclick="getCurrentUser()">ユーザー情報取得</button>
-        </div>
-        
-        <div id="result">
-            <p>ボタンをクリックして動作確認してください。</p>
-        </div>
+        <!-- フッター部分 -->
+        <?!= include('components/footer.html'); ?>
     </div>
-
+    
+    <!-- アプリケーションデータ -->
     <script>
-        // 初期化完了
-        document.getElementById('status').innerHTML = '✅ 初期化完了';
-        document.getElementById('status').className = 'status success';
-        
-        // GAS接続テスト
-        function testConnection() {
-            document.getElementById('result').innerHTML = '<p>🔄 接続テスト中...</p>';
-            
-            google.script.run
-                .withSuccessHandler(function(result) {
-                    document.getElementById('result').innerHTML = 
-                        '<p><strong>✅ 接続成功!</strong></p>' +
-                        '<p>GASからの応答: ' + result + '</p>';
-                })
-                .withFailureHandler(function(error) {
-                    document.getElementById('result').innerHTML = 
-                        '<p><strong>❌ 接続失敗</strong></p>' +
-                        '<p>エラー: ' + error + '</p>';
-                })
-                .testFunction();
-        }
-        
-        // ユーザー情報取得（シンプル版）
-        function getCurrentUser() {
-            document.getElementById('result').innerHTML = '<p>🔄 ユーザー情報取得中...</p>';
-            
-            try {
-                // 現在はSession情報のみ表示
-                const userEmail = Session.getActiveUser ? 'ユーザー情報取得機能は未実装' : '不明';
-                document.getElementById('result').innerHTML = 
-                    '<p><strong>ユーザー情報</strong></p>' +
-                    '<p>この機能は後で実装します</p>';
-            } catch (error) {
-                document.getElementById('result').innerHTML = 
-                    '<p><strong>❌ エラー</strong></p>' +
-                    '<p>' + error + '</p>';
-            }
-        }
-        
-        console.log('🚀 部活予定表システム - フロントエンド初期化完了');
+        window.APP_DATA = {
+            pageType: '<?= pageType ?>',
+            stepNumber: <?= stepNumber ?>,
+            pageTitle: '<?= pageTitle ?>',
+            currentUser: <?= JSON.stringify(currentUser) ?>,
+            pageData: <?= pageData || '{}' ?>
+        };
+    </script>
+    
+    <!-- 共通JavaScript -->
+    <script>
+        <?!= include('shared/common.js'); ?>
+    </script>
+    
+    <!-- ページ固有JavaScript -->
+    <script>
+        <?!= include('assets/' + pageType + '.js'); ?>
     </script>
 </body>
 </html>
