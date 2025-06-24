@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= pageTitle ?> - 部活予定表システム</title>
-    <style>
-        <?!= include('style.css.html'); ?>
-    </style>
+    <?!= include('style.css') ?>
 </head>
 <body>
     <div class="app-container">
@@ -36,15 +34,6 @@
             pageData: <?= pageData || '{}' ?>
         };
     </script>
-    
-    <!-- 共通JavaScript -->
-    <script>
-        <?!= include('script.js.html'); ?>
-    </script>
-    
-    <!-- ページ固有JavaScript -->
-    <script>
-        <?!= include('assets/' + pageType + '.js'); ?>
-    </script>
+    <?!= include('script.js') ?>
 </body>
 </html>
