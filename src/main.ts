@@ -1,19 +1,52 @@
 /**
- * Copyright 2023 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * 最小限のメインエントリーポイント
+ * まずはHTMLレンダリングのみを確認
  */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { hello } from './example-module';
 
-console.log(hello());
+/**
+ * Webアプリケーションのエントリーポイント
+ * GASから直接呼び出される関数
+ */
+function doGet(): GoogleAppsScript.HTML.HtmlOutput {
+    try {
+      // 最もシンプルなHTML出力
+      const htmlOutput = HtmlService.createTemplateFromFile('index');
+      
+      return htmlOutput.evaluate()
+        .setTitle('部活予定表システム')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+        
+    } catch (error) {
+      console.error('doGet エラー:', error);
+      
+      // エラー時のフォールバック
+      return HtmlService.createHtmlOutput(`
+        <html>
+          <body>
+            <h1>エラーが発生しました</h1>
+            <p>システムの初期化に失敗しました。</p>
+            <p>エラー: ${error}</p>
+          </body>
+        </html>
+      `).setTitle('エラー');
+    }
+  }
+  
+  /**
+   * HTMLファイルの内容を取得（include用）
+   */
+  function include(filename: string): string {
+    try {
+      return HtmlService.createHtmlOutputFromFile(filename).getContent();
+    } catch (error) {
+      console.error(`ファイル読み込みエラー: ${filename}`, error);
+      return `<!-- Error loading ${filename}: ${error} -->`;
+    }
+  }
+  
+  /**
+   * テスト用の簡単な関数
+   */
+  function testFunction(): string {
+    return 'Hello from GAS!';
+  }
