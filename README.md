@@ -49,7 +49,7 @@ clasp login
 ```json
 {
   "scriptId": "【開発用スクリプトID】",
-  "rootDir": "./src"
+  "rootDir": "./dist"
 }
 ```
 
@@ -58,7 +58,7 @@ clasp login
 ```json
 {
   "scriptId": "【本番用スクリプトID】",
-  "rootDir": "./src"
+  "rootDir": "./dist"
 }
 ```
 
@@ -67,7 +67,7 @@ clasp login
 ```json
 {
   "scriptId": "【開発用スクリプトID】",
-  "rootDir": "./src"
+  "rootDir": "./dist"
 }
 ```
 
