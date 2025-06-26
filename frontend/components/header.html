@@ -7,10 +7,10 @@
         </h1>
         <div class="user-info">
             <span class="user-name" id="user-name">
-                <?= currentUser.name || 'ゲスト' ?>
+                <?= currentUser && currentUser.name ? currentUser.name : 'ゲスト' ?>
             </span>
             <span class="user-email" id="user-email">
-                <?= currentUser.email || '' ?>
+                <?= currentUser && currentUser.email ? currentUser.email : '' ?>
             </span>
         </div>
     </div>

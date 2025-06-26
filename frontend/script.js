@@ -28,18 +28,41 @@ function initializeCommonFeatures() {
  * ユーザー情報表示の更新
  */
 function updateUserDisplay() {
+    console.log('👤 ユーザー情報更新開始');
+    
     const user = window.APP_DATA.currentUser;
+    console.log('取得したユーザー情報:', user);
     
     const userNameElement = document.getElementById('user-name');
     const userEmailElement = document.getElementById('user-email');
     
-    if (userNameElement && user.name) {
-        userNameElement.textContent = user.name;
+    console.log('DOM要素:', { userNameElement, userEmailElement });
+    
+    if (userNameElement) {
+        if (user && user.name) {
+            userNameElement.textContent = user.name;
+            console.log('ユーザー名を設定:', user.name);
+        } else {
+            userNameElement.textContent = 'ゲスト';
+            console.log('ユーザー名が見つからないため、ゲストを設定');
+        }
+    } else {
+        console.warn('ユーザー名要素が見つかりません');
     }
     
-    if (userEmailElement && user.email) {
-        userEmailElement.textContent = user.email;
+    if (userEmailElement) {
+        if (user && user.email) {
+            userEmailElement.textContent = user.email;
+            console.log('ユーザーメールを設定:', user.email);
+        } else {
+            userEmailElement.textContent = '';
+            console.log('ユーザーメールが見つからないため、空文字を設定');
+        }
+    } else {
+        console.warn('ユーザーメール要素が見つかりません');
     }
+    
+    console.log('👤 ユーザー情報更新完了');
 }
 
 /**

@@ -30,8 +30,8 @@
             pageType: '<?= pageType ?>',
             stepNumber: '<?= stepNumber ?>',
             pageTitle: '<?= pageTitle ?>',
-            currentUser: '<?= JSON.stringify(currentUser) ?>',
-            pageData: "<?= pageData || '{}' ?>"
+            currentUser: <?= JSON.stringify(currentUser) ?>,
+            pageData: <?= pageData || '{}' ?>
         };
     </script>
     <?!= include('script.js') ?>
