@@ -1,18 +1,51 @@
-<!-- ファイルを処理中画面 -->
+<!-- 処理中画面 -->
 <div class="page-container" id="processing">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">ファイルを処理中</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">⚙️ 処理中</h1>
+        <p class="page-description">ファイルを解析してカレンダーイベントを作成しています</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- 処理状況表示 -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <div class="processing-container">
+                <div class="processing-spinner"></div>
+                <h2 id="processing-status">ファイルを解析中...</h2>
+                <p id="processing-details">しばらくお待ちください</p>
+                
+                <!-- プログレスバー -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                </div>
+                <p class="progress-text"><span id="progress-percent">0</span>% 完了</p>
+            </div>
         </div>
+        
+        <!-- 処理ログ -->
+        <div class="content-section">
+            <h2>📝 処理ログ</h2>
+            <div class="processing-log" id="processing-log">
+                <div class="log-entry info">処理を開始しました...</div>
+                <!-- JavaScriptで動的に追加 -->
+            </div>
+        </div>
+        
+        <!-- 注意事項 -->
+        <div class="content-section">
+            <h2>⏱️ 処理時間について</h2>
+            <ul>
+                <li>ファイルサイズや予定数により処理時間が変わります</li>
+                <li>最大6分程度かかる場合があります</li>
+                <li>処理中はブラウザを閉じないでください</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" id="cancel-btn" onclick="navigateToPage('upload')">キャンセル</button>
+        <button class="btn btn-primary" id="processing-next-btn" disabled style="display: none;" onclick="navigateToPage('preview')">プレビューへ →</button>
     </div>
 </div>

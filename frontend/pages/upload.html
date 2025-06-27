@@ -1,18 +1,45 @@
-<!-- アップロード画面 -->
+<!-- ファイルアップロード画面 -->
 <div class="page-container" id="upload">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">アップロード</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">📁 Excelファイルアップロード</h1>
+        <p class="page-description">部活の月間予定表ファイル（Excel形式）をアップロードしてください</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- ファイルアップロードエリア -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <h2>📤 ファイル選択</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-content">
+                    <div class="upload-icon">📄</div>
+                    <p class="upload-text">ここにExcelファイルをドラッグ&ドロップ</p>
+                    <p class="upload-subtext">または</p>
+                    <button class="btn btn-primary" id="file-select-btn">ファイルを選択</button>
+                    <input type="file" id="file-input" accept=".xlsx,.xlsm" style="display: none;">
+                </div>
+            </div>
+            <div class="file-info" id="file-info" style="display: none;">
+                <p>選択されたファイル: <span id="file-name"></span></p>
+                <p>ファイルサイズ: <span id="file-size"></span></p>
+            </div>
         </div>
+        
+        <!-- 注意事項 -->
+        <div class="content-section">
+            <h2>⚠️ 注意事項</h2>
+            <ul>
+                <li>対応ファイル形式: .xlsx, .xlsm</li>
+                <li>最大ファイルサイズ: 1MB</li>
+                <li>月間予定表の形式に従ってください</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" onclick="navigateToPage('login')">← 戻る</button>
+        <button class="btn btn-primary" id="upload-next-btn" disabled onclick="navigateToPage('processing')">次へ →</button>
     </div>
 </div>

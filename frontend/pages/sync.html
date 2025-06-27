@@ -1,18 +1,79 @@
-<!-- カレンダーを追加しています画面 -->
+<!-- カレンダー同期画面 -->
 <div class="page-container" id="sync">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">カレンダーを追加しています</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">📅 カレンダー同期</h1>
+        <p class="page-description">予定を追加するGoogleカレンダーを選択してください</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- カレンダー選択 -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <h2>📂 カレンダー選択</h2>
+            <div class="calendar-selector">
+                <label for="calendar-select">同期先カレンダー:</label>
+                <select id="calendar-select" class="form-control">
+                    <option value="">読み込み中...</option>
+                    <!-- JavaScriptで動的に追加 -->
+                </select>
+            </div>
+            
+            <div class="calendar-info" id="calendar-info" style="display: none;">
+                <p>📧 カレンダー所有者: <span id="calendar-owner"></span></p>
+                <p>🔒 アクセス権限: <span id="calendar-access"></span></p>
+            </div>
         </div>
+        
+        <!-- 同期内容確認 -->
+        <div class="content-section">
+            <h2>📋 同期内容確認</h2>
+            <div class="sync-summary">
+                <div class="summary-grid">
+                    <div class="summary-card">
+                        <div class="summary-icon">📊</div>
+                        <div class="summary-content">
+                            <div class="summary-number" id="total-events">0</div>
+                            <div class="summary-label">総イベント数</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">📅</div>
+                        <div class="summary-content">
+                            <div class="summary-number" id="date-range-display">-</div>
+                            <div class="summary-label">対象期間</div>
+                        </div>
+                    </div>
+                    
+                    <div class="summary-card">
+                        <div class="summary-icon">⏱️</div>
+                        <div class="summary-content">
+                            <div class="summary-number" id="estimated-time">約2分</div>
+                            <div class="summary-label">推定処理時間</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 注意事項 -->
+        <div class="content-section">
+            <h2>⚠️ 重要な注意事項</h2>
+            <div class="warning-box">
+                <ul>
+                    <li>既存の予定は上書きされません</li>
+                    <li>同じ予定を複数回実行すると重複します</li>
+                    <li>処理開始後はキャンセルできません</li>
+                    <li>完了まで他の操作は行わないでください</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" onclick="navigateToPage('preview')">← プレビューに戻る</button>
+        <button class="btn btn-primary" id="sync-start-btn" disabled onclick="startSync()">🚀 同期開始</button>
     </div>
 </div>

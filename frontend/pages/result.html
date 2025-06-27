@@ -1,18 +1,106 @@
-<!-- 結果画面 -->
+<!-- 処理結果画面 -->
 <div class="page-container" id="result">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">結果</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">✅ 処理完了</h1>
+        <p class="page-description">カレンダーへの同期処理が完了しました</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- 結果サマリー -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <h2>📊 処理結果サマリー</h2>
+            <div class="result-summary">
+                <div class="result-card success">
+                    <div class="result-number" id="success-count">0</div>
+                    <div class="result-label">成功</div>
+                </div>
+                
+                <div class="result-card error">
+                    <div class="result-number" id="error-count">0</div>
+                    <div class="result-label">失敗</div>
+                </div>
+                
+                <div class="result-card warning">
+                    <div class="result-number" id="warning-count">0</div>
+                    <div class="result-label">警告</div>
+                </div>
+                
+                <div class="result-card">
+                    <div class="result-number" id="total-processed">0</div>
+                    <div class="result-label">総処理数</div>
+                </div>
+            </div>
         </div>
+        
+        <!-- 詳細結果 -->
+        <div class="content-section">
+            <h2>📋 詳細結果</h2>
+            <div class="table-container">
+                <table class="result-table" id="result-table">
+                    <thead>
+                        <tr>
+                            <th>状態</th>
+                            <th>日付</th>
+                            <th>時間</th>
+                            <th>内容</th>
+                            <th>結果</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- サンプルデータ（後輩向け） -->
+                        <tr class="result-row success">
+                            <td><span class="status-icon">✅</span></td>
+                            <td>7/1</td>
+                            <td>14:00-17:00</td>
+                            <td>練習</td>
+                            <td>正常に作成されました</td>
+                        </tr>
+                        <tr class="result-row error">
+                            <td><span class="status-icon">❌</span></td>
+                            <td>7/2</td>
+                            <td>15:00-18:00</td>
+                            <td>練習</td>
+                            <td>カレンダーアクセスエラー</td>
+                        </tr>
+                        <!-- 実際のデータはJavaScriptで動的に挿入 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- ログファイル -->
+        <div class="content-section">
+            <h2>📄 ログファイル</h2>
+            <p>処理の詳細ログが保存されました：</p>
+            <div class="log-info">
+                <p>📁 保存場所: <span id="log-location">Google Drive</span></p>
+                <p>📅 保存日時: <span id="log-timestamp">2025/06/27 14:30:15</span></p>
+                <button class="btn btn-secondary" id="view-log-btn">ログを表示</button>
+            </div>
+        </div>
+        
+        <!-- 次のアクション -->
+        <div class="content-section">
+            <h2>🎯 次にできること</h2>
+            <div class="next-actions">
+                <button class="btn btn-outline" onclick="navigateToPage('upload')">
+                    🔄 別のファイルを処理
+                </button>
+                <button class="btn btn-outline" onclick="window.open('https://calendar.google.com', '_blank')">
+                    📅 Googleカレンダーを開く
+                </button>
+                <button class="btn btn-outline" onclick="downloadLog()">
+                    📥 ログをダウンロード
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" onclick="navigateToPage('upload')">← 最初から</button>
+        <button class="btn btn-primary" onclick="window.close()">完了</button>
     </div>
 </div>

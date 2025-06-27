@@ -1,18 +1,83 @@
-<!-- 予定一覧画面 -->
+<!-- データプレビュー画面 -->
 <div class="page-container" id="preview">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">予定一覧</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">👀 データプレビュー</h1>
+        <p class="page-description">アップロードされたファイルの内容を確認してください</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- 解析結果サマリー -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <h2>📊 解析結果</h2>
+            <div class="summary-info">
+                <div class="summary-item">
+                    <span class="summary-label">対象月:</span>
+                    <span class="summary-value" id="target-month">2025年7月</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">有効なイベント数:</span>
+                    <span class="summary-value" id="event-count">15件</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">処理対象期間:</span>
+                    <span class="summary-value" id="date-range">7/1 〜 7/31</span>
+                </div>
+            </div>
         </div>
+        
+        <!-- データテーブル -->
+        <div class="content-section">
+            <h2>📅 予定一覧</h2>
+            <div class="table-container">
+                <table class="preview-table" id="preview-table">
+                    <thead>
+                        <tr>
+                            <th>日付</th>
+                            <th>曜日</th>
+                            <th>時間</th>
+                            <th>場所</th>
+                            <th>担当</th>
+                            <th>詳細</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- サンプルデータ（後輩向け） -->
+                        <tr>
+                            <td>7/1</td>
+                            <td>火</td>
+                            <td>14:00-17:00</td>
+                            <td>体育館</td>
+                            <td>田中先生</td>
+                            <td>通常練習</td>
+                        </tr>
+                        <tr>
+                            <td>7/3</td>
+                            <td>木</td>
+                            <td>15:00-18:00</td>
+                            <td>グラウンド</td>
+                            <td>佐藤先生</td>
+                            <td>試合形式練習</td>
+                        </tr>
+                        <!-- 実際のデータはJavaScriptで動的に挿入 -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- エラー・警告 -->
+        <div class="content-section" id="warnings-section" style="display: none;">
+            <h2>⚠️ 警告・注意事項</h2>
+            <div class="warning-list" id="warning-list">
+                <!-- JavaScriptで動的に追加 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" onclick="navigateToPage('upload')">← 戻る</button>
+        <button class="btn btn-primary" onclick="navigateToPage('sync')">カレンダー選択へ →</button>
     </div>
 </div>

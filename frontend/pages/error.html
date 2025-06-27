@@ -2,17 +2,92 @@
 <div class="page-container" id="error">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">エラー</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">❌ エラーが発生しました</h1>
+        <p class="page-description">処理中に問題が発生しました。以下の情報をご確認ください</p>
     </div>
     
     <!-- メインコンテンツエリア -->
     <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
+        <!-- エラー情報 -->
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <div class="error-container">
+                <div class="error-icon">🚨</div>
+                <h2 class="error-title" id="error-title">予期しないエラー</h2>
+                <div class="error-message" id="error-message">
+                    システムで予期しないエラーが発生しました。お手数ですが、最初からやり直してください。
+                </div>
+            </div>
         </div>
+        
+        <!-- エラーの種類と対処法 -->
+        <div class="content-section">
+            <h2>🛠️ よくあるエラーと対処法</h2>
+            <div class="error-solutions">
+                <div class="solution-item">
+                    <h3>📁 ファイル関連エラー</h3>
+                    <ul>
+                        <li>ファイル形式が正しくない → .xlsx または .xlsm ファイルを使用</li>
+                        <li>ファイルサイズが大きすぎる → 1MB以下のファイルを使用</li>
+                        <li>ファイルが破損している → 元のファイルを確認</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-item">
+                    <h3>🔐 認証関連エラー</h3>
+                    <ul>
+                        <li>ログインが切れている → 再度Googleログイン</li>
+                        <li>カレンダーアクセス権限がない → 管理者に確認</li>
+                        <li>セッションタイムアウト → ページを再読み込み</li>
+                    </ul>
+                </div>
+                
+                <div class="solution-item">
+                    <h3>⏱️ 処理時間エラー</h3>
+                    <ul>
+                        <li>処理時間が6分を超えた → 小さなファイルに分割</li>
+                        <li>ネットワークが不安定 → 安定した環境で再実行</li>
+                        <li>サーバーが混雑 → 時間をおいて再試行</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 技術的な詳細 -->
+        <div class="content-section" id="technical-details" style="display: none;">
+            <h2>🔍 技術的な詳細</h2>
+            <div class="error-details" id="error-details">
+                <!-- JavaScriptで動的に表示 -->
+            </div>
+            <p><small>※ この情報は技術者向けです</small></p>
+        </div>
+        
+        <!-- サポート情報 -->
+        <div class="content-section">
+            <h2>📞 サポート</h2>
+            <p>上記の対処法で解決しない場合は、以下の情報とともにお問い合わせください：</p>
+            <div class="support-info">
+                <div class="support-item">
+                    <span class="support-label">エラー発生時刻:</span>
+                    <span class="support-value" id="error-timestamp">-</span>
+                </div>
+                <div class="support-item">
+                    <span class="support-label">ブラウザ:</span>
+                    <span class="support-value" id="browser-info">-</span>
+                </div>
+                <div class="support-item">
+                    <span class="support-label">エラーコード:</span>
+                    <span class="support-value" id="error-code">-</span>
+                </div>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="toggleTechnicalDetails()">技術詳細を表示</button>
+            <button class="btn btn-secondary" onclick="copyErrorInfo()">エラー情報をコピー</button>
+        </div>
+    </div>
+    
+    <!-- アクションボタン -->
+    <div class="page-actions">
+        <button class="btn btn-secondary" onclick="navigateToPage('upload')">🏠 最初から</button>
+        <button class="btn btn-primary" onclick="location.reload()">🔄 ページを再読み込み</button>
     </div>
 </div>

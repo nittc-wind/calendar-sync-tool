@@ -1,0 +1,352 @@
+/* 追加のページ固有スタイル */
+
+/* アップロード画面 */
+.upload-area {
+    border: 2px dashed #007bff;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    background: #f8f9ff;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.upload-area:hover {
+    border-color: #0056b3;
+    background: #e6f0ff;
+}
+
+.upload-area.dragover {
+    border-color: #28a745;
+    background: #e6ffe6;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.upload-text {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.upload-subtext {
+    color: #6c757d;
+    margin-bottom: 1rem;
+}
+
+.file-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #e6ffe6;
+    border: 1px solid #28a745;
+    border-radius: 4px;
+}
+
+/* ログイン画面 */
+.login-status {
+    text-align: center;
+}
+
+.login-not-authenticated,
+.login-authenticated {
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.login-not-authenticated {
+    background: #fff5f5;
+    border: 1px solid #dc3545;
+}
+
+.login-authenticated {
+    background: #f0fff4;
+    border: 1px solid #28a745;
+}
+
+.user-info {
+    margin: 1rem 0;
+    text-align: left;
+    display: inline-block;
+}
+
+.user-info p {
+    margin: 0.5rem 0;
+}
+
+/* プレビュー画面 */
+.summary-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border-left: 4px solid #007bff;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: #495057;
+}
+
+.summary-value {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.preview-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.preview-table th,
+.preview-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.preview-table th {
+    background: #007bff;
+    color: white;
+    font-weight: 600;
+}
+
+.preview-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.preview-table tbody tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.preview-table tbody tr:nth-child(even):hover {
+    background: #f1f1f1;
+}
+
+/* 処理中画面 */
+.processing-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.processing-spinner {
+    width: 4rem;
+    height: 4rem;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.progress-bar {
+    width: 100%;
+    height: 1rem;
+    background: #e9ecef;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    transition: width 0.3s ease;
+    border-radius: 0.5rem;
+}
+
+.processing-log {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.log-entry {
+    margin-bottom: 0.5rem;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9rem;
+}
+
+.log-entry.success {
+    color: #28a745;
+}
+
+.log-entry.error {
+    color: #dc3545;
+}
+
+.log-entry.info {
+    color: #17a2b8;
+}
+
+/* 同期画面 */
+.calendar-selector {
+    margin-bottom: 1rem;
+}
+
+.calendar-selector select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.sync-summary {
+    background: #e6f7ff;
+    border: 1px solid #91d5ff;
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+/* 結果画面 */
+.result-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.result-card {
+    text-align: center;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid;
+}
+
+.result-card.success {
+    background: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+.result-card.error {
+    background: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.result-card.warning {
+    background: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.result-number {
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+}
+
+.result-label {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* エラー画面 */
+.error-container {
+    text-align: center;
+    padding: 2rem;
+}
+
+.error-icon {
+    font-size: 4rem;
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.error-title {
+    color: #dc3545;
+    margin-bottom: 1rem;
+}
+
+.error-message {
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.error-details {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 1rem;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9rem;
+    text-align: left;
+    white-space: pre-wrap;
+}
+
+/* 警告リスト */
+.warning-list {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.warning-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    color: #856404;
+}
+
+.warning-icon {
+    margin-right: 0.5rem;
+    margin-top: 0.1rem;
+}
+
+/* レスポンシブ対応の追加 */
+@media (max-width: 768px) {
+    .summary-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .result-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-table {
+        font-size: 0.9rem;
+    }
+    
+    .preview-table th,
+    .preview-table td {
+        padding: 0.5rem;
+    }
+}
