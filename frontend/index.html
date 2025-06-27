@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= pageTitle ?> - 部活予定表システム</title>
+    <title>部活予定表システム</title>
     <?!= include('style.css') ?>
 </head>
 <body>
@@ -17,23 +17,16 @@
         <!-- メインコンテンツ部分 -->
         <main class="main-content">
             <!-- 各画面のコンテンツがここに挿入される -->
-            <?!= include('pages/' + pageType + '.html'); ?>
+            <?!= include('pages/calendar.html'); ?>
+            <?!= include('pages/preview.html'); ?>
+            <?!= include('pages/result.html'); ?>
+            <?!= include('pages/upload.html'); ?>
         </main>
         
         <!-- フッター部分 -->
         <?!= include('components/footer.html'); ?>
     </div>
     
-    <!-- アプリケーションデータ -->
-    <script>
-        window.APP_DATA = {
-            pageType: '<?= pageType ?>',
-            stepNumber: '<?= stepNumber ?>',
-            pageTitle: '<?= pageTitle ?>',
-            currentUser: <?= JSON.stringify(currentUser) ?>,
-            pageData: <?= pageData || '{}' ?>
-        };
-    </script>
     <?!= include('script.js') ?>
 </body>
 </html>

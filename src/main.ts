@@ -1,26 +1,13 @@
 /**
- * 最小限のメインエントリーポイント
- * まずはHTMLレンダリングのみを確認
- */
-
-/**
  * Webアプリケーションのエントリーポイント
  * GASから直接呼び出される関数
  */
-import { createPage } from './webapp/page-manager';
 
 function doGet(): GoogleAppsScript.HTML.HtmlOutput {
     try {
-        return showUploadPage();
-        /*
       // 最もシンプルなHTML出力
       const htmlOutput = HtmlService.createTemplateFromFile('index');
-      
-      return htmlOutput.evaluate()
-        .setTitle('部活予定表システム')
-        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-        */
-        
+      return htmlOutput.evaluate().setTitle('部活予定表システム')
     } catch (error) {
       console.error('doGet エラー:', error);
       
@@ -54,40 +41,4 @@ function doGet(): GoogleAppsScript.HTML.HtmlOutput {
    */
   function testFunction(): string {
     return 'Hello from GAS!';
-  }
-
-  /**
-   * 1. アップロード画面表示
-   */
-  function showUploadPage(): GoogleAppsScript.HTML.HtmlOutput {
-    return createPage('upload');
-  }
-  
-  /**
-   * 2. プレビュー画面表示
-   */
-  function showPreviewPage(fileData: any): GoogleAppsScript.HTML.HtmlOutput {
-    return createPage('preview', { fileData });
-  }
-  
-  /**
-   * 3. カレンダー選択画面表示
-   */
-  function showCalendarPage(eventsData: any): GoogleAppsScript.HTML.HtmlOutput {
-    return createPage('calendar', { eventsData });
-  }
-  
-  /**
-   * 4. 結果画面表示
-   */
-  function showResultPage(results: any): GoogleAppsScript.HTML.HtmlOutput {
-    return createPage('result', { results });
-  }
-  
-  // グローバル関数として公開
-  declare global {
-    function showUploadPage(): GoogleAppsScript.HTML.HtmlOutput;
-    function showPreviewPage(fileData: any): GoogleAppsScript.HTML.HtmlOutput;
-    function showCalendarPage(eventsData: any): GoogleAppsScript.HTML.HtmlOutput;
-    function showResultPage(results: any): GoogleAppsScript.HTML.HtmlOutput;
   }
