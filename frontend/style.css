@@ -20,7 +20,7 @@ body {
 
 /* ヘッダー */
 .app-header {
-    background: #fff;
+    background: #4285f4;
     border-bottom: 1px solid #e9ecef;
     padding: 1rem 2rem;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -35,7 +35,7 @@ body {
 }
 
 .app-title {
-    color: #2c3e50;
+    color: #ffffff;
     font-size: 1.5rem;
     font-weight: 600;
 }
