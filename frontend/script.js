@@ -6,9 +6,9 @@ const pages = Array.from(document.querySelectorAll('.page-container'));
 
 // ページ切り替え処理
 function switchPage(pageName) {   
-    // ページ未指定の場合はuploadを、ページが存在しない場合はerrorを表示
+    // ページ未指定の場合はloginを、ページが存在しない場合はerrorを表示
     if (!pageName) {
-        pageName = 'upload';
+        pageName = 'login';
     }
     const page = pages.find(page => page.id === pageName);
     if (!page) {
@@ -41,3 +41,25 @@ Array.from(document.getElementsByClassName("link-btn")).forEach(el => {
       google.script.history.push(null, { page: pageName } );    // URLパラメーターをブラウザの履歴にプッシュ
     });
   });
+
+// ページ読み込み時にユーザー情報を取得
+window.onload = function() {
+    google.script.run
+      .withSuccessHandler(showUserInfo)
+      .getCurrentUser();
+  };
+  
+  function showUserInfo(user) {
+    if (user) {
+      document.getElementById('userEmail').textContent = user.email;
+    }
+  }
+  
+  function logout() {
+    // ログアウト処理
+    if (confirm('ログアウトしますか？')) {
+      google.script.run
+        .withSuccessHandler(() => window.location.reload())
+        .logout();
+    }
+  }

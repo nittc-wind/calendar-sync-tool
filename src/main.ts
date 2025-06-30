@@ -2,13 +2,22 @@
  * Webアプリケーションのエントリーポイント
  * GASから直接呼び出される関数
  */
+import "./auth";
+import "./auth-lite";
 
 function doGet(): GoogleAppsScript.HTML.HtmlOutput {
-    try {
-      // 最もシンプルなHTML出力
-      const htmlOutput = HtmlService.createTemplateFromFile('index');
-      return htmlOutput.evaluate().setTitle('部活予定表システム')
-    } catch (error) {
+  try {
+    const user = Session.getActiveUser();
+    const email: string = user.getEmail();
+    if(email) {
+      return HtmlService.createTemplateFromFile('index')
+        .evaluate()
+        .setTitle('部活予定表システム')
+        .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+    } else {
+      return showLoginPage();
+    }
+  } catch (error) {
       console.error('doGet エラー:', error);
       
       // エラー時のフォールバック
@@ -22,6 +31,13 @@ function doGet(): GoogleAppsScript.HTML.HtmlOutput {
         </html>
       `).setTitle('エラー');
     }
+  }
+
+  function showLoginPage() {
+    return HtmlService.createTemplateFromFile('login')
+      .evaluate()
+      .setTitle('ログイン - 部活予定表システム')
+      .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
   }
   
   /**
