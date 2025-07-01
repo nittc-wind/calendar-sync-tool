@@ -39,7 +39,7 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   const tempFile = DriveApp.createFile(blob);
   // Spreadsheetへ変換
   const resource = {
-    title: tempFile.getName(),
+    name: tempFile.getName(),
     mimeType: MimeType.GOOGLE_SHEETS,
     parents: [{ id: DriveApp.getRootFolder().getId() }]
   };
