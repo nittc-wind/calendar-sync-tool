@@ -1,4 +1,19 @@
 /**
+ * Copyright 2023 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
  * ページ管理 - 各画面の生成とデータ渡し
  */
 
@@ -55,22 +70,22 @@ function getCurrentUserSafe(): any {
   try {
     const user = Session.getActiveUser();
     const email = user.getEmail();
-    
+
     // メールアドレスが取得できない場合の処理
     if (!email) {
       console.warn('ユーザーメールアドレスが取得できません');
       return { email: '', name: 'ゲスト' };
     }
-    
+
     // メールアドレスからユーザー名部分を抽出（@より前の部分）
     const name = email.split('@')[0];
-    
+
     // ユーザー名が空の場合の処理
     if (!name) {
       console.warn('ユーザー名の抽出に失敗しました');
       return { email: email, name: 'ゲスト' };
     }
-    
+
     return {
       email: email,
       name: name,
