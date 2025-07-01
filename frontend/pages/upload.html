@@ -11,8 +11,46 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <form id="uploadForm">
+              <input type="file" name="file" accept=".xlsx,.xls" required />
+              <input type="submit" value="アップロード" />
+            </form>
+            <div id="result"></div>
+            <div id="loading" style="display: none;">アップロード中...</div>
         </div>
+        <script>
+          document.getElementById('uploadForm').onsubmit = function(e) {
+            e.preventDefault();
+            const fileInput = this.file;
+            if (!fileInput.files.length) return;
+            const file = fileInput.files[0];
+            
+            // ローディング表示
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').innerText = '';
+            
+            const reader = new FileReader();
+            reader.onload = function() {
+              // DataURL形式でbase64化
+              const dataUrl = reader.result;
+              google.script.run
+                .withSuccessHandler(function(id) {
+                  document.getElementById('loading').style.display = 'none';
+                  document.getElementById('result').innerHTML = 
+                    'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' + id + '" target="_blank">スプレッドシートを開く</a>';
+                })
+                .withFailureHandler(function(err) {
+                  document.getElementById('loading').style.display = 'none';
+                  document.getElementById('result').innerText = 'エラー: ' + err.message;
+                })
+                .uploadExcelFile({ 
+                  dataUrl: dataUrl, 
+                  fileName: file.name, 
+                  mimeType: file.type 
+                });
+            };
+            reader.readAsDataURL(file);
+          };
+        </script>
     </div>
 </div>
