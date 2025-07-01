@@ -115,6 +115,23 @@ body {
     width: 100%;
 }
 
+.user-info{
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1rem;
+}
+
+.user-name{
+    font-weight: bold;
+}
+
+.user-email{
+    color: #666;
+    margin-left: 0.5em;
+    font-size: 0.95em;
+}
+
 /* 共通ボタンスタイル */
 .btn {
     display: inline-block;
