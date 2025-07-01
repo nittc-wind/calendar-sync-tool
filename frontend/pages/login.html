@@ -2,8 +2,8 @@
 <div class="page-container" id="login">
     <!-- ページタイトル -->
     <div class="page-header">
-        <h1 class="page-title">ログイン</h1>
-        <p class="page-description">画面の説明文</p>
+        <h1 class="page-title">🔐 Googleログイン</h1>
+        <p class="page-description">Googleアカウントでログイン</p>
     </div>
     
     <!-- メインコンテンツエリア -->
@@ -11,8 +11,13 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <button class="btn btn-primary" id="loginButton">Googleでログイン</button>
+            <div class="login-user-info" >
+                <!--ログイン時に表示-->
+                <span class="user-name" id="login-user-name"></span>
+                <span class="user-email" id="login-user-email"></span><br>
+                <button class="btn btn-secondary" id="logoutButton" style="display:none;">ログアウト</button>
+            </div>
         </div>
     </div>
 </div>
