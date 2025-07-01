@@ -41,3 +41,10 @@ Array.from(document.getElementsByClassName("link-btn")).forEach(el => {
       google.script.history.push(null, { page: pageName } );    // URLパラメーターをブラウザの履歴にプッシュ
     });
   });
+
+//ログイン完了時、ログインページで名前とメールを表示
+function ShowUserInfo(user){
+    document.getElementById('login-user-name').textContent = user.name;
+    document.getElementById('login-user-email').textContent = user.mail;
+    document.getElementById('logoutButton').style.display = 'inline-block';
+}
