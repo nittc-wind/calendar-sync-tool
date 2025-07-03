@@ -191,6 +191,22 @@ body {
     color: #0056b3;
 }
 
+/* ドロップエリア用スタイル */
+.drop-area {
+    border: 2px dashed #4285f4;
+    border-radius: 8px;
+    padding: 2em;
+    text-align: center;
+    color: #4285f4;
+    background: #f8f9fa;
+    cursor: pointer;
+    margin-bottom: 1em;
+}
+.drop-area.dragover {
+    background: #e3f0fd;
+    border-color: #0056b3;
+}
+
 /* レスポンシブ対応 */
 @media (max-width: 768px) {
     .header-content,
@@ -240,6 +256,7 @@ body {
     margin-bottom: 1.5rem;
     border-radius: 8px;
     border: 1px solid #e9ecef;
+    text-align: center;
 }
 
 .page-actions {
