@@ -48,3 +48,30 @@ function ShowUserInfo(user){
     document.getElementById('login-user-email').textContent = user.mail;
     document.getElementById('logoutButton').style.display = 'inline-block';
 }
+
+//DnD処理
+const dropArea = document.getElementById('drag-drop');
+const fileInput = document.getElementById('file-input');
+const uploadBtn = document.getElementById('upload-button');
+const uploadStatus = document.getElementById('upload-status');
+if(dropArea){
+    dropArea.addEventListener('dragover',(e)=>{
+        e.preventDefault();
+        dropArea.classList.add('dragover');
+    });
+
+    dropArea.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('dragover');
+    });
+
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            fileInput.files = files;
+            dropArea.textContent = `選択中: ${files[0].name}`;
+        }
+    });
+}
