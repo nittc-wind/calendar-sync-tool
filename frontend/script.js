@@ -51,6 +51,7 @@ function ShowUserInfo(user){
 
 //DnD処理
 const dropArea = document.getElementById('drag-drop');
+const selectFile= document.getElementById('file-select')
 const fileInput = document.getElementById('file-input');
 const uploadBtn = document.getElementById('upload-button');
 const uploadStatus = document.getElementById('upload-status');
@@ -72,6 +73,39 @@ if(dropArea){
         if (files.length > 0) {
             fileInput.files = files;
             dropArea.textContent = `選択中: ${files[0].name}`;
+            uploadBtn.style.display = "inline-block";
         }
     });
+
+    fileInput.addEventListener('click',()=> selectFile.click());
+
+    selectFile.addEventListener('change', () => {
+        if (selectFile.files.length > 0) {
+         dropArea.textContent = `選択中: ${selectFile.files[0].name}`;
+         uploadBtn.style.display = "inline-block";
+        }
+    });
+
+    uploadBtn.addEventListener('click', () => {
+    if (!fileInput.files.length) {
+        uploadStatus.textContent = 'ファイルを選択してください。';
+        return;
+    }
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64 = e.target.result.split(',')[1];
+        google.script.run
+            .withSuccessHandler(() => {
+                uploadStatus.textContent = 'アップロード完了';
+            })
+            .withFailureHandler(() => {
+                uploadStatus.textContent = 'アップロード失敗';
+            })
+            .uploadFileToGAS(file.name, base64);
+    };
+    reader.readAsDataURL(file);
+});
 }
+
+

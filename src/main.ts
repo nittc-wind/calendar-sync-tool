@@ -42,3 +42,12 @@ function doGet(): GoogleAppsScript.HTML.HtmlOutput {
   function testFunction(): string {
     return 'Hello from GAS!';
   }
+
+
+// main.ts または コード.js
+function uploadFileToGAS(filename, base64) {
+  const blob = Utilities.newBlob(Utilities.base64Decode(base64), undefined, filename);
+  // 例: Googleドライブに保存
+  DriveApp.createFile(blob);
+  return 'OK';
+}
