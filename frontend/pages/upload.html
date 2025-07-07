@@ -11,6 +11,7 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
+<<<<<<< HEAD
             <div id="drag-drop" class="drag-drop">
                 <h2>ここにファイルをドラッグ＆ドロップ</h2>
                 <p>もしくは</p>
@@ -19,9 +20,57 @@
             <button id="file-input" class="btn btn-primary">ファイルを選択</button><br><br>
             <button id="upload-button" class="btn btn-primary" style="display:none;">アップロード</button>
             <p id="upload-status"></p>
+=======
+            <form id="uploadForm">
+                <div id="drag-drop" class="drag-drop drop-area">
+                  <h2>ここにファイルをドラッグ＆ドロップ</h2>
+                  <p>もしくは</p>
+              </div>
+              <input type="file" id="file-select" style="display: none;">
+              <button id="file-input" class="btn btn-primary">ファイルを選択</button><br><br>
+              <button id="upload-button" class="btn btn-primary" style="display:none;">アップロード</button>
+              <p id="upload-status"></p>
+            </form>
+            <div id="result"></div>
+            <div id="loading" style="display: none;">アップロード中...</div>
+>>>>>>> aa6b84d (コンフリクトを修正)
         </div>
         <script>
-          document.getElementById('uploadForm').onsubmit = function(e) {
+
+          const dropArea = document.getElementById('drag-drop');
+          const selectFile= document.getElementById('file-select')
+          const fileInput = document.getElementById('file-input');
+          const uploadBtn = document.getElementById('upload-button');
+          const uploadStatus = document.getElementById('upload-status');
+          if(dropArea){
+              dropArea.addEventListener('dragover',(e)=>{
+                  e.preventDefault();
+                  dropArea.classList.add('dragover');
+              });
+
+              dropArea.addEventListener('dragleave', (e) => {
+                  e.preventDefault();
+                  dropArea.classList.remove('dragover');
+              });
+
+              dropArea.addEventListener('drop', (e) => {
+                  e.preventDefault();
+                  dropArea.classList.remove('dragover');
+                  const files = e.dataTransfer.files;
+                  if (files.length > 0) {
+                      fileInput.files = files;
+                      dropArea.textContent = `選択中: ${files[0].name}`;
+                      uploadBtn.style.display = "inline-block";
+                  }
+              });
+            fileInput.addEventListener('click',()=> selectFile.click());
+            selectFile.addEventListener('change', () => {
+            if (selectFile.files.length > 0) {
+            dropArea.textContent = `選択中: ${selectFile.files[0].name}`;
+            uploadBtn.style.display = "inline-block";
+            }
+            });
+            document.getElementById('uploadForm').onsubmit = function(e) {
             e.preventDefault();
             const fileInput = this.file;
             if (!fileInput.files.length) return;
@@ -53,6 +102,7 @@
             };
             reader.readAsDataURL(file);
           };
+        }
         </script>
     </div>
 </div>

@@ -48,8 +48,7 @@ function ShowUserInfo(user){
     document.getElementById('login-user-email').textContent = user.mail;
     document.getElementById('logoutButton').style.display = 'inline-block';
 }
-
-//DnD処理
+/*/DnD処理
 const dropArea = document.getElementById('drag-drop');
 const selectFile= document.getElementById('file-select')
 const fileInput = document.getElementById('file-input');
@@ -108,4 +107,4 @@ if(dropArea){
 });
 }
 
-
+*/
