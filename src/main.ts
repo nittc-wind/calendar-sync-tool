@@ -21,12 +21,12 @@ function include(filename: string): string {
 
 
 // main.ts または コード.js
-function uploadFileToGAS(filename: string, base64: string) {
-  const blob = Utilities.newBlob(Utilities.base64Decode(base64), undefined, filename);
+function uploadFileToGASorm: (form: { dataUrl: string, fileName: string, mimeType: string }): string {
+  const base64 = form.dataUrl.split(',')[1];
+  const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
   // 例: Googleドライブに保存
   DriveApp.createFile(blob);
   return 'OK';
-}
 }
 
 /**
@@ -40,7 +40,7 @@ function testFunction(): string {
  * フロントからファイルを受け取り、Driveに一時保存→Spreadsheet変換
  */
 function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: string }) {
-  // DataURLからbase64部分を抽出
+  // DataURLからbase64を抽出
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
 
