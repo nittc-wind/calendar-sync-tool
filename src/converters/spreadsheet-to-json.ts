@@ -2,85 +2,69 @@
  * スプレッドシートをJSONに変換する機能
  */
 
-import { SpreadsheetData, JsonConversionOptions, JsonConversionResult } from '../types/json-converter-types.js';
+import { JsonConversionOptions, JsonConversionResult } from '../types/json-converter-types.js';
 
 /**
- * スプレッドシートをJSONに変換する
+ * スプレッドシートをJSONに変換する（convertJson.jsロジック準拠）
  */
 export function convertSpreadsheetToJson(
-  spreadsheetId: string, 
+  spreadsheetId: string,
   options: JsonConversionOptions = {}
 ): JsonConversionResult {
   try {
-    // スプレッドシートを開く
     const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
     if (!spreadsheet) {
-      return {
-        success: false,
-        error: 'スプレッドシートが見つかりません'
-      };
+      return { success: false, error: 'スプレッドシートが見つかりません' };
     }
-
-    // 最初のシートを取得
     const sheet = spreadsheet.getSheets()[0];
     if (!sheet) {
-      return {
-        success: false,
-        error: 'シートが見つかりません'
-      };
+      return { success: false, error: 'シートが見つかりません' };
     }
 
-    // データ範囲を取得
-    const lastRow = sheet.getLastRow();
-    const lastCol = sheet.getLastColumn();
-    
-    if (lastRow === 0 || lastCol === 0) {
-      return {
-        success: false,
-        error: 'データが存在しません'
-      };
-    }
+    const startRow = 7; // 1-indexed, 7行目から
+    const numRows = 31; // 最大31日分
+    const numCols = 9;  // 9列分
+    const values = sheet.getRange(startRow, 1, numRows, numCols).getValues();
+    const result: { data_row: any[] }[] = [];
 
-    // ヘッダー行を取得
-    const headerRange = sheet.getRange(1, 1, 1, lastCol);
-    const headers = headerRange.getValues()[0].map((cell: any) => 
-      cell ? String(cell).trim() : ''
-    );
-
-    // データ行を取得
-    const dataRange = sheet.getRange(2, 1, lastRow - 1, lastCol);
-    const rawData = dataRange.getValues();
-
-    // データを整形
-    const rows = rawData.map((row: any[]) => {
-      const rowData: { [key: string]: any } = {};
-      headers.forEach((header: string, index: number) => {
-        if (header) {
-          const value = row[index];
-          rowData[header] = formatCellValue(value, options);
+    for (let r = 0; r < numRows; ++r) {
+      const row = values[r];
+      let data_row = new Array(numCols);
+      let flag = false;
+      for (let c = 0; c < numCols; ++c) {
+        switch (c) {
+          case 0: // 日付（Excelシリアル値→UNIX秒）
+            const date = row[c];
+            if (date === '' || date === null || date === undefined) {
+              flag = true;
+              break;
+            }
+            data_row[c] = excelSerialToUnixTime(date);
+            break;
+          case 2:
+          case 3:
+            data_row[c] = TorF(row[c]);
+            break;
+          default:
+            data_row[c] = (row[c] !== undefined && row[c] !== null) ? row[c] : '';
+            break;
         }
-      });
-      return rowData;
-    });
-
-    // 結果を生成
-    let resultData: any;
-    
-    if (options.format === 'object') {
-      // オブジェクト形式（ヘッダーをキーとして使用）
-      resultData = rows;
-    } else {
-      // 配列形式（デフォルト）
-      resultData = rows;
+      }
+      if (data_row[3] === false) {
+        continue;
+      }
+      if (flag) {
+        break;
+      }
+      result.push({ data_row });
     }
 
     return {
       success: true,
-      data: resultData,
-      rowCount: rows.length,
-      columnCount: headers.length
+      data: result,
+      rowCount: result.length,
+      columnCount: numCols
     };
-
   } catch (error) {
     console.error('JSON変換エラー:', error);
     return {
@@ -91,40 +75,20 @@ export function convertSpreadsheetToJson(
 }
 
 /**
- * セルの値を適切な形式に変換
+ * Excelシリアル値→UNIXタイムスタンプ（秒）
  */
-function formatCellValue(value: any, options: JsonConversionOptions): any {
-  if (value === null || value === undefined || value === '') {
-    return null;
-  }
+function excelSerialToUnixTime(excelTime: number): number {
+  return Math.round((excelTime - 25569) * 86400);
+}
 
-  // 日付形式の処理
-  if (value instanceof Date) {
-    if (options.dateFormat) {
-      // カスタム日付形式
-      return Utilities.formatDate(value, Session.getScriptTimeZone(), options.dateFormat);
-    } else {
-      // ISO形式
-      return value.toISOString().split('T')[0];
-    }
-  }
-
-  // 数値の処理
-  if (typeof value === 'number') {
-    return value;
-  }
-
-  // 文字列の処理
-  if (typeof value === 'string') {
-    const trimmed = value.trim();
-    if (trimmed === '') {
-      return null;
-    }
-    return trimmed;
-  }
-
-  // その他の型
-  return String(value);
+/**
+ * ○→true, ✖→false, 文字列があればtrue, 空文字列/undefined/nullはfalse
+ */
+function TorF(char: any): boolean {
+  if (char === '○') return true;
+  if (char === '✖') return false;
+  if (typeof char === 'string' && char.trim() !== '') return true;
+  return false;
 }
 
 /**
@@ -144,7 +108,6 @@ export function getSpreadsheetInfo(spreadsheetId: string): {
         error: 'スプレッドシートが見つかりません'
       };
     }
-
     return {
       success: true,
       name: spreadsheet.getName(),
