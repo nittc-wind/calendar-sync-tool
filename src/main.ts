@@ -50,3 +50,14 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   tempFile.setTrashed(true);
   return file.id; // 変換後のSpreadsheetのID
 }
+
+/**
+ * Googleアカウントの名前とメールアドレスを返す
+ */
+function getLoginUser(): { name: string, mail: string } {
+  const user = Session.getActiveUser();
+  const mail = user.getEmail();
+  // GASのSession.getActiveUser()では名前は取得できないため、メールの@前を仮の名前とする
+  const name = mail ? mail.split('@')[0] : '';
+  return { name, mail };
+}

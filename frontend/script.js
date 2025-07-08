@@ -48,3 +48,6 @@ function ShowUserInfo(user){
     document.getElementById('login-user-email').textContent = user.mail;
     document.getElementById('logoutButton').style.display = 'inline-block';
 }
+google.script.run
+  .withSuccessHandler(ShowUserInfo)
+  .getLoginUser();
