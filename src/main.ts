@@ -18,17 +18,16 @@ function include(filename: string): string {
     console.error(`ファイル読み込みエラー: ${filename}`, error);
     return `<!-- Error loading ${filename}: ${error} -->`;
   }
-
-
-// main.ts または コード.js
-function uploadFileToGASorm: (form: { dataUrl: string, fileName: string, mimeType: string }): string {
+}
+/*
+function uploadFileToGAS(form: { dataUrl: string, fileName: string, mimeType: string }){
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
   // 例: Googleドライブに保存
   DriveApp.createFile(blob);
   return 'OK';
 }
-
+*/
 /**
  * テスト用の簡単な関数
  */
@@ -43,7 +42,7 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   // DataURLからbase64を抽出
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
-
+  
   // 一時的にDriveへ保存
   const tempFile = DriveApp.createFile(blob);
   // Spreadsheetへ変換
