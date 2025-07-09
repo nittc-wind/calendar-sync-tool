@@ -21,6 +21,14 @@
               <button id="upload-button" class="btn btn-primary" style="display:none;">アップロード</button>
               <p id="upload-status"></p>
             </form>
+            <div id="result"></div>
+            <div id="sheetIdArea" style="display:none; margin-top:10px;">
+              <label>スプレッドシートID:</label>
+              <input type="text" id="sheetIdText" readonly style="width: 300px;" />
+              <button id="copySheetIdBtn" type="button">コピー</button>
+            </div>
+            <div id="loading" style="display: none;">アップロード中...</div>
+
         </div>
         <script>
 
@@ -62,11 +70,10 @@
             const fileInput = this.file;
             if (!fileInput.files.length) return;
             const file = fileInput.files[0];
-            
             // ローディング表示
             document.getElementById('loading').style.display = 'block';
             document.getElementById('result').innerText = '';
-            
+            document.getElementById('sheetIdArea').style.display = 'none';
             const reader = new FileReader();
             reader.onload = function() {
               // DataURL形式でbase64化
@@ -74,8 +81,10 @@
               google.script.run
                 .withSuccessHandler(function(id) {
                   document.getElementById('loading').style.display = 'none';
-                  document.getElementById('result').innerHTML = 
+                  document.getElementById('result').innerHTML =
                     'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' + id + '" target="_blank">スプレッドシートを開く</a>';
+                  document.getElementById('sheetIdText').value = id;
+                  document.getElementById('sheetIdArea').style.display = 'block';
                 })
                 .withFailureHandler(function(err) {
                   document.getElementById('loading').style.display = 'none';
@@ -89,7 +98,13 @@
             };
             reader.readAsDataURL(file);
           };
-        }
+
+          document.getElementById('copySheetIdBtn').onclick = function() {
+            const input = document.getElementById('sheetIdText');
+            input.select();
+            input.setSelectionRange(0, 99999); // for mobile
+            document.execCommand('copy');
+          };
         </script>
     </div>
 </div>
