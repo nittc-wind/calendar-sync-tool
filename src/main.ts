@@ -60,8 +60,13 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   tempFile.setTrashed(true);
   return file.id; // 変換後のSpreadsheetのID
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
+=======
+
+
+>>>>>>> feat#30_2
 }
 
 /**
@@ -110,4 +115,7 @@ function getSpreadsheetInfoForFrontend(spreadsheetId: string) {
     };
   }
 }
+<<<<<<< HEAD
 >>>>>>> d8617ad28839706f94668c06fa9f0b7a43de3af5
+=======
+>>>>>>> feat#30_2
