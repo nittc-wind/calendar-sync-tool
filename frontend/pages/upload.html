@@ -11,8 +11,8 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <div id="drag-drop" class="drag-drop">
-              <form>
+            <div id="drag-drop" class="drop-area">
+              <form id="uploadForm">
                 <h2>ここにファイルをドラッグ＆ドロップ</h2>
                 <p>もしくは</p>
             </div>
@@ -58,6 +58,7 @@
                       uploadBtn.style.display = "inline-block";
                   }
               });
+            }
             fileInput.addEventListener('click',()=> selectFile.click());
             selectFile.addEventListener('change', () => {
             if (selectFile.files.length > 0) {
