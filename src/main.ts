@@ -3,6 +3,8 @@
  * GASから直接呼び出される関数
  */
 
+import { convertSpreadsheetToJson, getSpreadsheetInfo } from './converters/spreadsheet-to-json.js';
+
 function doGet(): GoogleAppsScript.HTML.HtmlOutput {
   const htmlOutput = HtmlService.createTemplateFromFile('index');
   return htmlOutput.evaluate().setTitle('部活予定表システム')
@@ -57,4 +59,55 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   // 一時ファイル削除
   tempFile.setTrashed(true);
   return file.id; // 変換後のSpreadsheetのID
+<<<<<<< HEAD
 }
+=======
+}
+
+/**
+ * スプレッドシートをJSONに変換する
+ * フロントエンドから呼び出される
+ */
+function convertSpreadsheetToJsonForFrontend(spreadsheetId: string, options?: any) {
+  try {
+    const result = convertSpreadsheetToJson(spreadsheetId, options);
+    
+    if (result.success) {
+      return {
+        success: true,
+        data: JSON.stringify(result.data, null, 2), // 整形されたJSON文字列
+        rowCount: result.rowCount,
+        columnCount: result.columnCount
+      };
+    } else {
+      return {
+        success: false,
+        error: result.error
+      };
+    }
+  } catch (error) {
+    console.error('JSON変換エラー:', error);
+    return {
+      success: false,
+      error: `変換処理エラー: ${error instanceof Error ? error.message : String(error)}`
+    };
+  }
+}
+
+/**
+ * スプレッドシートの基本情報を取得
+ * フロントエンドから呼び出される
+ */
+function getSpreadsheetInfoForFrontend(spreadsheetId: string) {
+  try {
+    const result = getSpreadsheetInfo(spreadsheetId);
+    return result;
+  } catch (error) {
+    console.error('スプレッドシート情報取得エラー:', error);
+    return {
+      success: false,
+      error: `情報取得エラー: ${error instanceof Error ? error.message : String(error)}`
+    };
+  }
+}
+>>>>>>> d8617ad28839706f94668c06fa9f0b7a43de3af5
