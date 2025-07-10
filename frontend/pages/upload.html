@@ -11,8 +11,8 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <div id="drag-drop" class="drop-area">
-              <form id="uploadForm">
+            <div id="drag-drop" class="drag-drop">
+              <form>
                 <h2>ここにファイルをドラッグ＆ドロップ</h2>
                 <p>もしくは</p>
             </div>
@@ -21,11 +21,6 @@
               <button id="upload-button" class="btn btn-primary" style="display:none;">アップロード</button>
               <p id="upload-status"></p>
             </form>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> feat#30_2
             <div id="result"></div>
             <div id="sheetIdArea" style="display:none; margin-top:10px;">
               <label>スプレッドシートID:</label>
@@ -33,11 +28,6 @@
               <button id="copySheetIdBtn" type="button">コピー</button>
             </div>
             <div id="loading" style="display: none;">アップロード中...</div>
-<<<<<<< HEAD
->>>>>>> d8617ad28839706f94668c06fa9f0b7a43de3af5
-=======
-
->>>>>>> feat#30_2
         </div>
         <script>
 
@@ -67,7 +57,6 @@
                       uploadBtn.style.display = "inline-block";
                   }
               });
-            }
             fileInput.addEventListener('click',()=> selectFile.click());
             selectFile.addEventListener('change', () => {
             if (selectFile.files.length > 0) {
@@ -75,6 +64,7 @@
             uploadBtn.style.display = "inline-block";
             }
             });
+          }
             document.getElementById('uploadForm').onsubmit = function(e) {
             e.preventDefault();
             const fileInput = this.file;
@@ -108,23 +98,12 @@
             };
             reader.readAsDataURL(file);
           };
-<<<<<<< HEAD
-<<<<<<< HEAD
-        }
-=======
-=======
-
->>>>>>> feat#30_2
           document.getElementById('copySheetIdBtn').onclick = function() {
             const input = document.getElementById('sheetIdText');
             input.select();
             input.setSelectionRange(0, 99999); // for mobile
             document.execCommand('copy');
           };
-<<<<<<< HEAD
->>>>>>> d8617ad28839706f94668c06fa9f0b7a43de3af5
-=======
->>>>>>> feat#30_2
         </script>
     </div>
 </div>
