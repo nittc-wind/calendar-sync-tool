@@ -25,7 +25,24 @@ function include(filename: string): string {
 function uploadFileToGAS(form: { dataUrl: string, fileName: string, mimeType: string }){
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
-  // 例: Googleドライブに保存
+  // 例: Googleドライブに保  function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: string }): string {
+    const base64 = form.dataUrl.split(',')[1];
+    const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
+  
+    // 一時的にDriveへ保存
+    const file = DriveApp.createFile(blob);
+  
+    // スプレッドシートに変換
+    const spreadsheetFile = DriveApp.getFileById(
+      Drive.Files.insert(
+        { mimeType: MimeType.GOOGLE_SHEETS, title: form.fileName },
+        blob
+      ).id
+    );
+  
+    // スプレッドシートIDを返す
+    return spreadsheetFile.getId();
+  }存
   DriveApp.createFile(blob);
   return 'OK';
 }
@@ -58,9 +75,9 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   const file = Drive.Files.create(resource, tempFile.getBlob());
   // 一時ファイル削除
   tempFile.setTrashed(true);
-  return file.id; // 変換後のSpreadsheetのID
-
-
+  
+ console.log(file.id);
+ return file.id; // 変換後のSpreadsheetのID
 }
 
 /**
