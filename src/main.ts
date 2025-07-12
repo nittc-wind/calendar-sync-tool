@@ -33,10 +33,10 @@ function testFunction(): string {
  * フロントからファイルを受け取り、Driveに一時保存→Spreadsheet変換
  */
 function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: string }) {
-  // DataURLからbase64部分を抽出
+  // DataURLからbase64を抽出
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
-
+  
   // 一時的にDriveへ保存
   const tempFile = DriveApp.createFile(blob);
   // Spreadsheetへ変換
@@ -50,7 +50,8 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
   const file = Drive.Files.create(resource, tempFile.getBlob());
   // 一時ファイル削除
   tempFile.setTrashed(true);
-  return file.id; // 変換後のSpreadsheetのID
+  
+ return file.id; // 変換後のSpreadsheetのID
 }
 
 /**
