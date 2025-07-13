@@ -12,7 +12,7 @@
                 <div id="loading" style="display: none; margin-top: 10px;">変換中...</div>
                 <div id="error" style="color: red; margin-top: 10px;"></div>
                 <textarea id="jsonResult" style="width: 100%; height: 300px; margin-top: 10px;" readonly></textarea>
-                <div id="jsonTable" style="margin-top:20px;"></div>
+                <div id="jsonTable" style="width: 100%; height: 300px; margin-top: 10px;"></div>
             </div>
             <script>
                 document.getElementById('convertBtn').onclick = function() {
@@ -44,7 +44,9 @@
                             errorDiv.innerText = 'エラー: ' + (err.message || err);
                         })
                         .convertSpreadsheetToJsonForFrontend(sheetId, {});
+
                     function jsonToTable(json){
+                        const columns = ["date","name","available","active","time","teacher","place","otherplase","detail"]
                         let data;
                         try{
                             data = typeof json === "string" ? JSON.parse(json):json;
@@ -54,18 +56,25 @@
                         if (!Array.isArray(data)||data.length === 0){
                                 return "<div style='color:red>データがありません</div>";
                         }
-                        let html  = "<table border='1' style='border-collapse:collapse;width:100%;'>";
+                        let html  = "<table border='1' style='border-collapse:collapse; width:100%; overflow-x:auto;'>";
                         html += "<tr>";
-                        Object.keys(data[0]).forEach(key => {
-                            html += `<th>${key}</th>`;
+                        columns.forEach(col => {
+                            html += `<th>${col}</th>`;
                         });
                         html +="</tr>";
                         data.forEach(row => {
                             html += "<tr>";
-                                Object.values(row).forEach(val => {
-                                    html += `<td>${val}</td>`
-                                });
-                                html += "</tr>";
+                            columns.forEach((col,i)=> {
+                                let val = row.data_row[i];
+                                if (col === "date" && typeof val === "number") {
+                                    const elapsedMillis = val / 10_000;
+                                    const epoch = new Date(Date.UTC(1601, 0, 1, 9, 0, 0)); // 基準日
+                                    const jsDate = new Date(epoch.getTime() + elapsedMillis);
+                                    val = jsDate.toISOString().slice(0, 10).replace(/-/g, ""); // yyyymmdd
+                                }
+                                html += `<td>${val !==undefined?val:""}</td>`;
+                            });
+                            html += "</tr>";
                         });
                         html += "</table>";
                         return html;
