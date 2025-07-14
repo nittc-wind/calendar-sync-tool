@@ -56,7 +56,7 @@
                         if (!Array.isArray(data)||data.length === 0){
                                 return "<div style='color:red>データがありません</div>";
                         }
-                        let html  = "<table border='1' style='border-collapse:collapse; width:100%; overflow-x:auto;'>";
+                        let html  = "<table border='1' style='order-collapse:collapse; width:100%; overflow-x:auto;'>";
                         html += "<tr>";
                         columns.forEach(col => {
                             html += `<th>${col}</th>`;
@@ -64,21 +64,29 @@
                         html +="</tr>";
                         data.forEach(row => {
                             html += "<tr>";
-                            columns.forEach((col,i)=> {
+                            columns.forEach((col, i) => {
                                 let val = row.data_row[i];
                                 if (col === "date" && typeof val === "number") {
                                     const elapsedMillis = val / 10_000;
-                                    const epoch = new Date(Date.UTC(1601, 0, 1, 9, 0, 0)); // 基準日
+                                    const epoch = new Date("1601-01-01T09:00:00+09:00"); // JSTの9:00指定
                                     const jsDate = new Date(epoch.getTime() + elapsedMillis);
-                                    val = jsDate.toISOString().slice(0, 10).replace(/-/g, ""); // yyyymmdd
+                                    val = formatDateJST(jsDate)
                                 }
-                                html += `<td>${val !==undefined?val:""}</td>`;
+                                html += `<td>${val !== undefined ? val : ""}</td>`;
                             });
                             html += "</tr>";
                         });
+
                         html += "</table>";
                         return html;
 
+                    }
+                    function formatDateJST(date) {
+                        const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+                        const yyyy = jst.getUTCFullYear();
+                        const mm = String(jst.getUTCMonth() + 1).padStart(2, '0');
+                        const dd = String(jst.getUTCDate()).padStart(2, '0');
+                        return `${yyyy}${mm}${dd}`;
                     }
                 };
             </script>
