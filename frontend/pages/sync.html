@@ -11,8 +11,22 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
+            <ul id="calendar-list"></ul>
         </div>
     </div>
+    <script>
+      window.addEventListener('DOMContentLoaded', function() {
+        google.script.run
+          .withSuccessHandler(function(calendars) {
+            // カレンダー一覧を #calendar-list に表示
+            const list = document.getElementById('calendar-list');
+            if (list && calendars) {
+              list.innerHTML = calendars.map(c =>
+                `<li>${c.summary} (${c.id})</li>`
+              ).join('');
+            }
+          })
+          .getGoogleCalendars();
+      });
+    </script>
 </div>
