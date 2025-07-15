@@ -1,20 +1,13 @@
 /**
- * Googleカレンダー一覧を返す（ダミー）
+ * Googleカレンダー一覧を返す（実データ版）
  * @return {Array<Object>} カレンダー情報の配列
  */
 export function getGoogleCalendars() {
-  return [
-    {
-      id: "primary",
-      summary: "自分のカレンダー",
-      description: "メインのカレンダー",
-      backgroundColor: "#9a9cff"
-    },
-    {
-      id: "abcdef123456@group.calendar.google.com",
-      summary: "会社の予定",
-      description: "",
-      backgroundColor: "#ff7537"
-    }
-  ];
+  const calendars = CalendarApp.getAllCalendars();
+  return calendars.map(cal => ({
+    id: cal.getId(),
+    summary: cal.getName(),
+    description: cal.getDescription(),
+    backgroundColor: "#9a9cff" // CalendarAppでは色は取得できないためダミー
+  }));
 } 
