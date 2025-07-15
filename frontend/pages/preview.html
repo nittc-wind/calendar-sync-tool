@@ -68,12 +68,12 @@
                                 let val = row.data_row[i];
                                 if (col === "date" && typeof val === "number") {
                                     //const elapsedMillis = val / 10_000;
-                                    //const epoch = new Date("1601-01-01T09:00:00+09:00"); // JSTの9:00指定
-                                    const jsDate = new Date(val/100000);
+                                
+                                    const jsDate = new Date(val);
                                     val = formatDateJST(jsDate)
                                 }
                                 html += `<td>${val !== undefined ? val : ""}</td>`;
-                            });
+                            })
                             html += "</tr>";
                         });
 
