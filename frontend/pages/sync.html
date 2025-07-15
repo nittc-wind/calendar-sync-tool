@@ -11,19 +11,41 @@
         <!-- ここに画面固有のコンテンツを追加 -->
         
         <div class="content-section">
-            <ul id="calendar-list"></ul>
+            <div class="calendar-selector">
+              <label for="calendar-select">同期先カレンダーを選択:</label>
+              <select id="calendar-select"></select>
+            </div>
+            <div id="calendar-info"></div>
         </div>
     </div>
+
     <script>
       window.addEventListener('DOMContentLoaded', function() {
         google.script.run
           .withSuccessHandler(function(calendars) {
-            // カレンダー一覧を #calendar-list に表示
-            const list = document.getElementById('calendar-list');
-            if (list && calendars) {
-              list.innerHTML = calendars.map(c =>
-                `<li>${c.summary} (${c.id})</li>`
+            const select = document.getElementById('calendar-select');
+            const info = document.getElementById('calendar-info');
+            if (select && calendars) {
+              // optionを追加
+              select.innerHTML = calendars.map((c, i) =>
+                `<option value="${i}">${c.summary}</option>`
               ).join('');
+              // 初期表示
+              showInfo(0);
+              // 選択変更時
+              select.addEventListener('change', function() {
+                showInfo(this.value);
+              });
+            }
+            function showInfo(idx) {
+              const c = calendars[idx];
+              info.innerHTML = `
+                <div>
+                  <strong>カレンダー名:</strong> ${c.summary}<br>
+                  <strong>ID:</strong> ${c.id}<br>
+                  <strong>説明:</strong> ${c.description || '-'}
+                </div>
+              `;
             }
           })
           .getGoogleCalendars();
