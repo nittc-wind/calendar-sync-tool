@@ -75,10 +75,10 @@ export function convertSpreadsheetToJson(
 }
 
 /**
- * Excelシリアル値→UNIXタイムスタンプ（秒）
+ * Excelシリアル値→UNIXタイムスタンプ（ミリ秒）
  */
 function excelSerialToUnixTime(excelTime: number): number {
-  return Math.round((excelTime - 25569) * 86400);
+  return Math.round((excelTime - 25569) * 86400 * 1000);
 }
 
 /**
