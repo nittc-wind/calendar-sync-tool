@@ -33,14 +33,20 @@ function testFunction(): string {
   return 'Hello from GAS!';
 }
 
+
+let progressMessage = '';
+function getProcessingProgress():string{
+  return progressMessage;
+}
+
 /**
  * フロントからファイルを受け取り、Driveに一時保存→Spreadsheet変換
  */
 function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: string }) {
   // DataURLからbase64を抽出
+  progressMessage = "データを取得中..."
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
-  
   // 一時的にDriveへ保存
   const tempFile = DriveApp.createFile(blob);
   // Spreadsheetへ変換
@@ -63,6 +69,7 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
  * フロントエンドから呼び出される
  */
 function convertSpreadsheetToJsonForFrontend(spreadsheetId: string, options?: any) {
+  progressMessage = 'ファイルを変換中...';
   try {
     const result = convertSpreadsheetToJson(spreadsheetId, options);
     
@@ -94,6 +101,7 @@ function convertSpreadsheetToJsonForFrontend(spreadsheetId: string, options?: an
  */
 function getSpreadsheetInfoForFrontend(spreadsheetId: string) {
   try {
+    progressMessage = '処理が完了しました!'
     const result = getSpreadsheetInfo(spreadsheetId);
     return result;
   } catch (error) {
