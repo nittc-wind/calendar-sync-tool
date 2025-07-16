@@ -17,7 +17,7 @@
           <button id="file-input" class="btn btn-primary" type="button">ファイルを選択</button><br><br>
           <span id="selected-file-name"></span>
         </div>
-        <button id="upload-button" class="btn btn-primary" type="submit" style="display:none;">アップロード</button>
+        <button id="upload-button" class="btn btn-primary" type="submit" style="display:none";>アップロード</button>
       </form>
       <div id="result"></div>
       <div id="sheetIdArea" style="display:none; margin-top:10px;">
@@ -79,7 +79,7 @@
 
       document.getElementById('uploadForm').addEventListener('submit', function (e) {
         e.preventDefault();
-
+        //window.location.href = 'pages/processing.html';
         if (!fileSelect.files.length) return;
         const file = fileSelect.files[0];
 

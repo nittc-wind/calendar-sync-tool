@@ -1,18 +1,35 @@
 <!-- ファイルを処理中画面 -->
 <div class="page-container" id="processing">
-    <!-- ページタイトル -->
-    <div class="page-header">
-        <h1 class="page-title">ファイルを処理中</h1>
-        <p class="page-description">画面の説明文</p>
-    </div>
+  <!-- ページタイトル -->
+  <div class="page-header">
+    <h1 class="page-title">ファイルを処理中</h1>
+    <p class="page-description"></p>
+  </div>
+  
+  <!-- メインコンテンツエリア -->
+  <div class="page-content">
+    <!-- ここに画面固有のコンテンツを追加 -->
     
-    <!-- メインコンテンツエリア -->
-    <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
-        <div class="content-section">
-            <h2>セクション1</h2>
-            <p>コンテンツ</p>
-        </div>
+    <div class="content-section">
+      <div class="spinner" id="proccesingSpinner"></div>
+      <p class="progress-status"></p> <!--JSあとでやる-->
+			<script>
+				function UpdateProgress(message){
+					const progressDiv = document.getElementById('progress-status');
+					progressDiv.textContent = message;
+				}
+				function pollProgress(){
+					google.script.run
+						.withSuccessHandler(function(progressMessage){
+							UpdateProgress(progressMessage);
+							if(progressMessage !== '処理が完了しました!')
+								setTimeout(pollProgress,1000);
+						})
+						.getProcessingProgress();
+				}
+
+				pollProgress();
+			</script>
     </div>
+  </div>
 </div>
