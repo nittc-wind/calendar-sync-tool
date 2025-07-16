@@ -4,6 +4,10 @@
  */
 
 import { convertSpreadsheetToJson, getSpreadsheetInfo } from './converters/spreadsheet-to-json.js';
+import { getGoogleCalendars } from './webapp/google-calendar-api.js';
+
+// @ts-ignore
+globalThis.getGoogleCalendars = getGoogleCalendars;
 
 function doGet(): GoogleAppsScript.HTML.HtmlOutput {
   const htmlOutput = HtmlService.createTemplateFromFile('index');
