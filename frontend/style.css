@@ -284,3 +284,28 @@ body {
     justify-content: space-between;
     margin-top: 2rem;
 }
+
+/*jsonからテーブル*/
+.tablearea{
+    width: 100%;
+    overflow: auto;
+}
+.Table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1em 0;
+    background: #fff;
+    min-width: 800px;
+}
+
+.Table th, .Table td {
+    border: 1px solid #ccc;
+    padding: 0.5em 1em;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.Table th {
+    background: #f0f4fa;
+    color: #333;
+}
