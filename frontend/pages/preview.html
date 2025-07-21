@@ -5,7 +5,7 @@
         <p class="page-description">スプレッドシートIDを入力してJSON変換を実行します。</p>
     </div>
     <div class="page-content">
-            <div class="content-section">
+        <div class="content-section">
                 <label for="sheetIdInput">スプレッドシートID:</label>
                 <input type="text" id="sheetIdInput" style="width: 300px;" />
                 <button id="convertBtn">変換</button>
@@ -13,82 +13,6 @@
                 <div id="error" style="color: red; margin-top: 10px;"></div>
                 <textarea id="jsonResult" style="width: 100%; height: 300px; margin-top: 10px;" readonly></textarea>
                 <div id="jsonTable" class="tablearea"></div>
-            </div>
-            <script>
-                document.getElementById('convertBtn').onclick = function() {
-                    const sheetId = document.getElementById('sheetIdInput').value.trim();
-                    const loading = document.getElementById('loading');
-                    const errorDiv = document.getElementById('error');
-                    const resultArea = document.getElementById('jsonResult');
-                    const tableDiv = document.getElementById('jsonTable')
-                    errorDiv.innerText = '';
-                    resultArea.value = '';
-                    tableDiv.innerHTML='';
-                    if (!sheetId) {
-                        errorDiv.innerText = 'スプレッドシートIDを入力してください。';
-                        return;
-                    }
-                    loading.style.display = 'block';
-                    google.script.run
-                        .withSuccessHandler(function(res) {
-                            loading.style.display = 'none';
-                            if (res.success) {
-                                resultArea.value = res.data;
-                                tableDiv.innerHTML = jsonToTable(res.data);
-                            } else {
-                                errorDiv.innerText = res.error || '変換に失敗しました。';
-                            }
-                        })
-                        .withFailureHandler(function(err) {
-                            loading.style.display = 'none';
-                            errorDiv.innerText = 'エラー: ' + (err.message || err);
-                        })
-                        .convertSpreadsheetToJsonForFrontend(sheetId, {});
-
-                    function jsonToTable(json){
-                        const columns = ["date","name","available","active","time","teacher","place","room","detail"]
-                        let data;
-                        try{
-                            data = typeof json === "string" ? JSON.parse(json):json;
-                        }catch(e){
-                            return "<div style='color:red;'>JSONのパースに失敗</div>";
-                        }
-                        if (!Array.isArray(data)||data.length === 0){
-                                return "<div style='color:red>データがありません</div>";
-                        }
-                        let html  = "<table class='Table'>";
-                        html += "<tr>";
-                        columns.forEach(col => {
-                            html += `<th>${col}</th>`;
-                        });
-                        html +="</tr>";
-                        data.forEach(row => {
-                            html += "<tr>";
-                            columns.forEach((col, i) => {
-                                let val = row.data_row[i];
-                                if (col === "date" && typeof val === "number") {
-                                    //const elapsedMillis = val / 10_000;
-                                    //const epoch = new Date("1601-01-01T09:00:00+09:00"); // JSTの9:00指定
-                                    const jsDate = new Date(val/100000);
-                                    val = formatDateJST(jsDate)
-                                }
-                                html += `<td>${val !== undefined ? val : ""}</td>`;
-                            });
-                            html += "</tr>";
-                        });
-
-                        html += "</table>";
-                        return html;
-
-                    }
-                    function formatDateJST(date) {
-                        const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-                        const yyyy = jst.getUTCFullYear();
-                        const mm = String(jst.getUTCMonth() + 1).padStart(2, '0');
-                        const dd = String(jst.getUTCDate()).padStart(2, '0');
-                        return `${yyyy}${mm}${dd}`;
-                    }
-                };
-            </script>
+        </div>
     </div>
 </div>
