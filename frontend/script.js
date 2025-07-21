@@ -95,7 +95,7 @@ function jsonToTable(json){
         return "<div style='color:red;'>jsonのパースに失敗</div>";
     }
     if (!Array.isArray(data)||data.length === 0){
-            return "<div style='color:red>データがありません</div>";
+            return "<div style='color:red'>データがありません</div>";
     }
 
     let html  = "<table class='Table'>";
@@ -109,13 +109,13 @@ function jsonToTable(json){
         html += "<tr>";
         columns.forEach((col, i) => {
             let val = row.data_row[i];
-            if (col === "date" && typeof val === "number") {
+            if (col === "日付" && typeof val === "number") {
                 //const elapsedmillis = val / 10_000;
                 //const epoch = new date("1601-01-01t09:00:00+09:00"); // jstの9:00指定
                 const jsdate = new Date(val/100000);
-                val = formatdatejst(jsdate)
+                val = formatDateJST(jsdate)
             }
-            html += `<td>${val !== undefined ? val : ""}</td>`;
+            html += `<td>${val !== undefined ? escapeHtml(String(val)):""}</td>`;
         });
         html += "</tr>";
     });
@@ -124,11 +124,22 @@ function jsonToTable(json){
     return html;
 }
 
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
 //日付変換
-function formatdatejst(date) {
-    const jst = new date(date.gettime() + 9 * 60 * 60 * 1000);
-    const yyyy = jst.getutcfullyear();
-    const mm = string(jst.getutcmonth() + 1).padstart(2, '0');
-    const dd = string(jst.getutcdate()).padstart(2, '0');
+function formatDateJST(date) {
+    const jst = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+    const yyyy = jst.getUTCFullYear();
+    const mm = String(jst.getUTCMonth() + 1).padStart(2, '0');
+    const dd = String(jst.getUTCDate()).padStart(2, '0');
     return `${yyyy}${mm}${dd}`;
 }
