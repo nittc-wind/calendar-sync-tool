@@ -8,6 +8,6 @@ export function getGoogleCalendars() {
     id: cal.getId(),
     summary: cal.getName(),
     description: cal.getDescription(),
-    backgroundColor: "#9a9cff" // CalendarAppでは色は取得できないためダミー
+    backgroundColor: '#9a9cff', // CalendarAppでは色は取得できないためダミー
   }));
-} 
+}

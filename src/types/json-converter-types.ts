@@ -48,4 +48,4 @@ export interface ConversionProgress {
   percentage: number;
   currentRow?: number;
   totalRows?: number;
-} 
+}
