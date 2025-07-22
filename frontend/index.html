@@ -1,35 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>部活予定表システム</title>
     <?!= include('style.css') ?>
-</head>
-<body>
+  </head>
+  <body>
     <div class="app-container">
-        <!-- ヘッダー部分 -->
-        <?!= include('components/header.html'); ?>
-        
-        <!-- ナビゲーション部分 -->
-        <?!= include('components/navigation.html'); ?>
-        
-        <!-- メインコンテンツ部分 -->
-        <main class="main-content">
-            <!-- 各画面のコンテンツがここに挿入される -->
-            <?!= include('pages/login.html'); ?>
-            <?!= include('pages/upload.html'); ?>
-            <?!= include('pages/processing.html'); ?>
-            <?!= include('pages/preview.html'); ?>
-            <?!= include('pages/sync.html'); ?>
-            <?!= include('pages/result.html'); ?>
-            <?!= include('pages/error.html'); ?>
-        </main>
-        
-        <!-- フッター部分 -->
-        <?!= include('components/footer.html'); ?>
+      <!-- ヘッダー部分 -->
+      <?!= include('components/header.html'); ?>
+
+      <!-- ナビゲーション部分 -->
+      <?!= include('components/navigation.html'); ?>
+
+      <!-- メインコンテンツ部分 -->
+      <main class="main-content">
+        <!-- 各画面のコンテンツがここに挿入される -->
+        <?!= include('pages/login.html'); ?> <?!= include('pages/upload.html');
+        ?> <?!= include('pages/processing.html'); ?> <?!=
+        include('pages/preview.html'); ?> <?!= include('pages/sync.html'); ?>
+        <?!= include('pages/result.html'); ?> <?!= include('pages/error.html');
+        ?>
+      </main>
+
+      <!-- フッター部分 -->
+      <?!= include('components/footer.html'); ?>
     </div>
-    
+
     <?!= include('script.js') ?>
-</body>
+  </body>
 </html>
