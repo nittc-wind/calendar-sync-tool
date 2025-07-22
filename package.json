@@ -7,7 +7,8 @@
   "keywords": ["google-apps-script", "calendar", "typescript"],
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "npm run license && eslint --fix src/ test/",
+    "lint": "eslint src/ test/ frontend/ scripts/",
+    "lint:fix": "eslint --fix src/ test/ frontend/ scripts/",
     "bundle": "rollup --no-treeshake -c rollup.config.mjs",
     "build:frontend": "npm run copy:frontend && npm run rename:frontend",
     "copy:frontend": "ncp frontend/ dist/",
