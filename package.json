@@ -4,10 +4,17 @@
   "description": "部活予定表カレンダー連携システム",
   "main": "build/index.js",
   "license": "Apache-2.0",
-  "keywords": ["google-apps-script", "calendar", "typescript"],
+  "keywords": [
+    "google-apps-script",
+    "calendar",
+    "typescript"
+  ],
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "npm run license && eslint --fix src/ test/",
+    "lint": "eslint src/ test/ frontend/ scripts/",
+    "lint:fix": "eslint --fix src/ test/ frontend/ scripts/",
+    "format": "prettier --write src/ test/ frontend/ scripts/",
+    "format:check": "prettier --check src/ test/ frontend/ scripts/",
     "bundle": "rollup --no-treeshake -c rollup.config.mjs",
     "build:frontend": "npm run copy:frontend && npm run rename:frontend",
     "copy:frontend": "ncp frontend/ dist/",
@@ -19,7 +26,8 @@
     "test:coverage": "jest test/ --coverage",
     "dev": "npm run build && clasp push -f",
     "deploy": "npm run lint && npm run test && npm run build && ncp .clasp-dev.json .clasp.json && clasp push -f",
-    "deploy:prod": "npm run lint && npm run test && npm run build && ncp .clasp-prod.json .clasp.json && clasp push"
+    "deploy:prod": "npm run lint && npm run test && npm run build && ncp .clasp-prod.json .clasp.json && clasp push",
+    "prepare": "husky"
   },
   "engines": {
     "node": ">=22"
@@ -45,5 +53,15 @@
     "rollup-plugin-typescript2": "^0.36.0",
     "ts-jest": "^29.4.0",
     "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,css,md}": [
+      "npm run lint:fix",
+      "npm run format"
+    ]
   }
 }

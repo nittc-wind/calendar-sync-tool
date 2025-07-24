@@ -55,22 +55,22 @@ function getCurrentUserSafe(): any {
   try {
     const user = Session.getActiveUser();
     const email = user.getEmail();
-    
+
     // メールアドレスが取得できない場合の処理
     if (!email) {
       console.warn('ユーザーメールアドレスが取得できません');
       return { email: '', name: 'ゲスト' };
     }
-    
+
     // メールアドレスからユーザー名部分を抽出（@より前の部分）
     const name = email.split('@')[0];
-    
+
     // ユーザー名が空の場合の処理
     if (!name) {
       console.warn('ユーザー名の抽出に失敗しました');
       return { email: email, name: 'ゲスト' };
     }
-    
+
     return {
       email: email,
       name: name,

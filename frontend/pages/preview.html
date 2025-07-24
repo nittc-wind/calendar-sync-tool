@@ -1,8 +1,23 @@
 <!-- プレビュー画面 -->
 <div class="page-container" id="preview">
-    <div class="page-header">
-        <h1 class="page-title">JSONプレビュー</h1>
-        <p class="page-description">スプレッドシートIDを入力してJSON変換を実行します。</p>
+  <div class="page-header">
+    <h1 class="page-title">JSONプレビュー</h1>
+    <p class="page-description">
+      スプレッドシートIDを入力してJSON変換を実行します。
+    </p>
+  </div>
+  <div class="page-content">
+    <div class="content-section">
+      <label for="sheetIdInput">スプレッドシートID:</label>
+      <input type="text" id="sheetIdInput" style="width: 300px" />
+      <button id="convertBtn">変換</button>
+      <div id="loading" style="display: none; margin-top: 10px">変換中...</div>
+      <div id="error" style="color: red; margin-top: 10px"></div>
+      <textarea
+        id="jsonResult"
+        style="width: 100%; height: 300px; margin-top: 10px"
+        readonly
+      ></textarea>
     </div>
     <div class="page-content">
         <div class="content-section">
