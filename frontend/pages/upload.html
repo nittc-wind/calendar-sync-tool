@@ -2,40 +2,17 @@
 <div class="page-container" id="upload">
   <!-- ページタイトル -->
   <div class="page-header">
-    <h1 class="page-title">Excelファイルをアップロード</h1>
-    <p class="page-description">
-      予定表のExcelファイルをアップロードしてください
-    </p>
+    <h1 class="page-title">アップロード</h1>
+    <p class="page-description">画面の説明文</p>
   </div>
   <!-- メインコンテンツエリア -->
-
   <div class="page-content">
+    <!-- ここに画面固有のコンテンツを追加 -->
+
     <div class="content-section">
       <form id="uploadForm">
-        <div id="drag-drop" class="drop-area">
-          <h2>ここにファイルをドラッグ＆ドロップ</h2>
-          <p>もしくは</p>
-          <input
-            type="file"
-            id="file-select"
-            name="file"
-            accept=".xlsx,.xls"
-            style="display: none"
-            required
-          />
-          <button id="file-input" class="btn btn-primary" type="button">
-            ファイルを選択</button
-          ><br /><br />
-          <span id="selected-file-name"></span>
-        </div>
-        <button
-          id="upload-button"
-          class="btn btn-primary"
-          type="submit"
-          style="display: none"
-        >
-          アップロード
-        </button>
+        <input type="file" name="file" accept=".xlsx,.xls" required />
+        <input type="submit" value="アップロード" />
       </form>
       <div id="result"></div>
       <div id="sheetIdArea" style="display: none; margin-top: 10px">
@@ -45,103 +22,49 @@
       </div>
       <div id="loading" style="display: none">アップロード中...</div>
     </div>
-
     <script>
-      const dropArea = document.getElementById('drag-drop');
-      const fileSelect = document.getElementById('file-select');
-      const fileInputBtn = document.getElementById('file-input');
-      const uploadBtn = document.getElementById('upload-button');
-      const result = document.getElementById('result');
-      const loading = document.getElementById('loading');
-      const sheetIdArea = document.getElementById('sheetIdArea');
-      const sheetIdText = document.getElementById('sheetIdText');
-      const selectedFileName = document.getElementById('selected-file-name');
-
-      // ドラッグオーバー時の挙動
-      dropArea.addEventListener('dragover', e => {
+      document.getElementById('uploadForm').onsubmit = function (e) {
         e.preventDefault();
-        dropArea.classList.add('dragover');
-      });
-
-      dropArea.addEventListener('dragleave', e => {
-        e.preventDefault();
-        dropArea.classList.remove('dragover');
-      });
-
-      dropArea.addEventListener('drop', e => {
-        e.preventDefault();
-        dropArea.classList.remove('dragover');
-        const files = e.dataTransfer.files;
-        if (files.length > 0) {
-          fileSelect.files = files;
-          selectedFileName.textContent = `選択中: ${files[0].name}`;
-          uploadBtn.style.display = 'inline-block';
-        }
-      });
-
-      // 「ファイルを選択」ボタンを押したとき
-      fileInputBtn.addEventListener('click', e => {
-        e.preventDefault();
-        fileSelect.click();
-      });
-
-      // ファイル選択後
-      fileSelect.addEventListener('change', () => {
-        if (fileSelect.files.length > 0) {
-          selectedFileName.textContent = `選択中: ${fileSelect.files[0].name}`;
-          uploadBtn.style.display = 'inline-block';
-        } else {
-          selectedFileName.textContent = '';
-        }
-      });
-
-      document
-        .getElementById('uploadForm')
-        .addEventListener('submit', function (e) {
-          e.preventDefault();
-
-          if (!fileSelect.files.length) return;
-          const file = fileSelect.files[0];
-
-          loading.style.display = 'block';
-          result.textContent = '';
-          sheetIdArea.style.display = 'none';
-
-          const reader = new FileReader();
-          reader.onload = function () {
-            const dataUrl = reader.result;
-
-            google.script.run
-              .withSuccessHandler(function (id) {
-                loading.style.display = 'none';
-                result.innerHTML =
-                  'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' +
-                  id +
-                  '" target="_blank">スプレッドシートを開く</a>';
-                sheetIdText.value = id;
-                sheetIdArea.style.display = 'block';
-                fileInputBtn.style.display = 'inline-block';
-              })
-              .withFailureHandler(function (err) {
-                loading.style.display = 'none';
-                result.textContent = 'エラー: ' + err.message;
-              })
-              .uploadExcelFile({
-                dataUrl: dataUrl,
-                fileName: file.name,
-                mimeType: file.type,
-              });
-          };
-          reader.readAsDataURL(file);
-        });
-
-      document
-        .getElementById('copySheetIdBtn')
-        .addEventListener('click', () => {
-          sheetIdText.select();
-          sheetIdText.setSelectionRange(0, 99999);
-          document.execCommand('copy');
-        });
+        const fileInput = this.file;
+        if (!fileInput.files.length) return;
+        const file = fileInput.files[0];
+        // ローディング表示
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('result').innerText = '';
+        document.getElementById('sheetIdArea').style.display = 'none';
+        const reader = new FileReader();
+        reader.onload = function () {
+          // DataURL形式でbase64化
+          const dataUrl = reader.result;
+          google.script.run
+            .withSuccessHandler(function (id) {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('result').innerHTML =
+                'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' +
+                id +
+                '" target="_blank">スプレッドシートを開く</a>';
+              document.getElementById('sheetIdText').value = id;
+              document.getElementById('sheetIdArea').style.display = 'block';
+            })
+            .withFailureHandler(function (err) {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('result').innerText =
+                'エラー: ' + err.message;
+            })
+            .uploadExcelFile({
+              dataUrl: dataUrl,
+              fileName: file.name,
+              mimeType: file.type,
+            });
+        };
+        reader.readAsDataURL(file);
+      };
+      document.getElementById('copySheetIdBtn').onclick = function () {
+        const input = document.getElementById('sheetIdText');
+        input.select();
+        input.setSelectionRange(0, 99999); // for mobile
+        document.execCommand('copy');
+      };
     </script>
   </div>
 </div>
