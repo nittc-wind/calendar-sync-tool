@@ -1,67 +1,70 @@
 <!-- アップロード画面 -->
 <div class="page-container" id="upload">
-    <!-- ページタイトル -->
-    <div class="page-header">
-        <h1 class="page-title">アップロード</h1>
-        <p class="page-description">画面の説明文</p>
+  <!-- ページタイトル -->
+  <div class="page-header">
+    <h1 class="page-title">アップロード</h1>
+    <p class="page-description">画面の説明文</p>
+  </div>
+  <!-- メインコンテンツエリア -->
+  <div class="page-content">
+    <!-- ここに画面固有のコンテンツを追加 -->
+
+    <div class="content-section">
+      <form id="uploadForm">
+        <input type="file" name="file" accept=".xlsx,.xls" required />
+        <input type="submit" value="アップロード" />
+      </form>
+      <div id="result"></div>
+      <div id="sheetIdArea" style="display: none; margin-top: 10px">
+        <label>スプレッドシートID:</label>
+        <input type="text" id="sheetIdText" readonly style="width: 300px" />
+        <button id="copySheetIdBtn" type="button">コピー</button>
+      </div>
+      <div id="loading" style="display: none">アップロード中...</div>
     </div>
-    <!-- メインコンテンツエリア -->
-    <div class="page-content">
-        <!-- ここに画面固有のコンテンツを追加 -->
-        
-        <div class="content-section">
-            <form id="uploadForm">
-              <input type="file" name="file" accept=".xlsx,.xls" required />
-              <input type="submit" value="アップロード" />
-            </form>
-            <div id="result"></div>
-            <div id="sheetIdArea" style="display:none; margin-top:10px;">
-              <label>スプレッドシートID:</label>
-              <input type="text" id="sheetIdText" readonly style="width: 300px;" />
-              <button id="copySheetIdBtn" type="button">コピー</button>
-            </div>
-            <div id="loading" style="display: none;">アップロード中...</div>
-        </div>
-        <script>
-          document.getElementById('uploadForm').onsubmit = function(e) {
-            e.preventDefault();
-            const fileInput = this.file;
-            if (!fileInput.files.length) return;
-            const file = fileInput.files[0];
-            // ローディング表示
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('result').innerText = '';
-            document.getElementById('sheetIdArea').style.display = 'none';
-            const reader = new FileReader();
-            reader.onload = function() {
-              // DataURL形式でbase64化
-              const dataUrl = reader.result;
-              google.script.run
-                .withSuccessHandler(function(id) {
-                  document.getElementById('loading').style.display = 'none';
-                  document.getElementById('result').innerHTML =
-                    'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' + id + '" target="_blank">スプレッドシートを開く</a>';
-                  document.getElementById('sheetIdText').value = id;
-                  document.getElementById('sheetIdArea').style.display = 'block';
-                })
-                .withFailureHandler(function(err) {
-                  document.getElementById('loading').style.display = 'none';
-                  document.getElementById('result').innerText = 'エラー: ' + err.message;
-                })
-                .uploadExcelFile({ 
-                  dataUrl: dataUrl, 
-                  fileName: file.name, 
-                  mimeType: file.type 
-                });
-            };
-            reader.readAsDataURL(file);
-          };
-          document.getElementById('copySheetIdBtn').onclick = function() {
-            const input = document.getElementById('sheetIdText');
-            input.select();
-            input.setSelectionRange(0, 99999); // for mobile
-            document.execCommand('copy');
-          };
-        </script>
-    </div>
+    <script>
+      document.getElementById('uploadForm').onsubmit = function (e) {
+        e.preventDefault();
+        const fileInput = this.file;
+        if (!fileInput.files.length) return;
+        const file = fileInput.files[0];
+        // ローディング表示
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('result').innerText = '';
+        document.getElementById('sheetIdArea').style.display = 'none';
+        const reader = new FileReader();
+        reader.onload = function () {
+          // DataURL形式でbase64化
+          const dataUrl = reader.result;
+          google.script.run
+            .withSuccessHandler(function (id) {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('result').innerHTML =
+                'アップロード成功: <a href="https://docs.google.com/spreadsheets/d/' +
+                id +
+                '" target="_blank">スプレッドシートを開く</a>';
+              document.getElementById('sheetIdText').value = id;
+              document.getElementById('sheetIdArea').style.display = 'block';
+            })
+            .withFailureHandler(function (err) {
+              document.getElementById('loading').style.display = 'none';
+              document.getElementById('result').innerText =
+                'エラー: ' + err.message;
+            })
+            .uploadExcelFile({
+              dataUrl: dataUrl,
+              fileName: file.name,
+              mimeType: file.type,
+            });
+        };
+        reader.readAsDataURL(file);
+      };
+      document.getElementById('copySheetIdBtn').onclick = function () {
+        const input = document.getElementById('sheetIdText');
+        input.select();
+        input.setSelectionRange(0, 99999); // for mobile
+        document.execCommand('copy');
+      };
+    </script>
+  </div>
 </div>
