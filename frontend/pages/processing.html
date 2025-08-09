@@ -11,10 +11,12 @@
     <!-- ここに画面固有のコンテンツを追加 -->
     
     <div class="content-section">
-      <div class="spinner" id="proccesingSpinner"></div>
-      <p class="progress-status"></p> <!--JSあとでやる-->
+      <div class="spinner" id="processingSpinner"></div>
+      <p class="progress-status">ファイルを処理しています...</p> <!--JSあとでやる-->
 			<script>
-				function UpdateProgress(message){
+				const progressPolling = false;
+
+				function updateProgress(message){
 					const progressDiv = document.getElementById('progress-status');
 					progressDiv.textContent = message;
 				}
@@ -29,6 +31,7 @@
 				}
 
 				pollProgress();
+				
 			</script>
     </div>
   </div>
