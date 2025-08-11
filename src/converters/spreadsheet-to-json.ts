@@ -43,7 +43,8 @@ export function convertSpreadsheetToJson(
               flag = true;
               break;
             }
-            data_row[c] = excelSerialToUnixTime(date);
+            //data_row[c] = excelSerialToUnixTime(date);
+            data_row[c] = date.getTime() / 1000;
             break;
           }
           case 2:

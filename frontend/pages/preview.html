@@ -108,7 +108,7 @@
             if (col === '日付' && typeof val === 'number') {
               //const elapsedmillis = val / 10_000;
               //const epoch = new date("1601-01-01t09:00:00+09:00"); // jstの9:00指定
-              const jsdate = new Date(val / 100000);
+              const jsdate = new Date(val * 1000);
               val = formatDateJST(jsdate);
             }
             html += `<td>${val !== undefined ? escapeHtml(String(val)) : ''}</td>`;
