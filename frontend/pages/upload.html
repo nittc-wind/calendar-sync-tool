@@ -81,7 +81,7 @@
         e.preventDefault();
         if (!fileSelect.files.length) return;
         const file = fileSelect.files[0];
-
+        switchPage('processing');
         loading.style.display = 'block';
         result.textContent = '';
         sheetIdArea.style.display = 'none';
@@ -89,7 +89,6 @@
         const reader = new FileReader();
         reader.onload = function () {
           const dataUrl = reader.result;
-          switchPage('processing');
           google.script.run
             .withSuccessHandler(function (id) {
               loading.style.display = 'none';
@@ -97,6 +96,14 @@
               sheetIdText.value = id;
               sheetIdArea.style.display = 'block';
               fileInputBtn.style.display = "inline-block";
+              sessionStorage.setItem("spreadsheetId",id);
+              console.log("id格納",id);
+              setTimeout(()=>{
+
+                switchPage('preview');
+                console.log("画面遷移した")
+                google.script.history.push(null,{page: 'preview'})
+              },1000); 
             })
             .withFailureHandler(function (err) {
               loading.style.display = 'none';
@@ -108,13 +115,12 @@
               mimeType: file.type
             });
         };
-        switchPage('preview');
         reader.readAsDataURL(file);
       });
 
       document.getElementById('copySheetIdBtn').addEventListener('click', () => {
         sheetIdText.select();
-      sheetIdText.setSelectionRange(0, 99999);
+        sheetIdText.setSelectionRange(0, 99999);
         document.execCommand('copy');
       });
     </script>
