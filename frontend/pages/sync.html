@@ -16,6 +16,17 @@
         <select id="calendar-select"></select>
       </div>
       <div id="calendar-info"></div>
+
+      <div class="json-input" style="margin-top: 16px">
+        <label for="json-textarea">予定表JSON:</label>
+        <textarea id="json-textarea" rows="10" style="width: 100%"></textarea>
+      </div>
+
+      <div class="actions" style="margin-top: 12px">
+        <button id="apply-button" disabled>反映</button>
+      </div>
+
+      <div id="status-area" style="margin-top: 12px"></div>
     </div>
   </div>
 
@@ -25,6 +36,9 @@
         .withSuccessHandler(function (calendars) {
           const select = document.getElementById('calendar-select');
           const info = document.getElementById('calendar-info');
+          const textarea = document.getElementById('json-textarea');
+          const applyButton = document.getElementById('apply-button');
+          const statusArea = document.getElementById('status-area');
           if (select && calendars) {
             // optionを追加
             select.innerHTML = calendars
@@ -35,6 +49,7 @@
             // 選択変更時
             select.addEventListener('change', function () {
               showInfo(this.value);
+              updateApplyState();
             });
           }
           function showInfo(idx) {
@@ -47,6 +62,47 @@
                 </div>
               `;
           }
+
+          function updateApplyState() {
+            const hasCalendar = select && select.value !== undefined;
+            const hasText = textarea && textarea.value.trim().length > 0;
+            applyButton.disabled = !(hasCalendar && hasText);
+          }
+
+          textarea.addEventListener('input', updateApplyState);
+
+          applyButton.addEventListener('click', function () {
+            const idx = parseInt(select.value, 10);
+            const cal = calendars[idx];
+            let parsed;
+            try {
+              parsed = JSON.parse(textarea.value);
+            } catch (e) {
+              statusArea.textContent = 'JSONの構文が不正です';
+              return;
+            }
+            statusArea.textContent = 'お待ちください...';
+
+            google.script.run
+              .withSuccessHandler(function (res) {
+                if (res && res.success) {
+                  const rows = (res.data || []).map(
+                    r =>
+                      `${r.date} ${r.title}: ${r.status}${r.error ? ' (' + r.error + ')' : ''}`
+                  );
+                  statusArea.textContent = '反映完了\n' + rows.join('\n');
+                } else {
+                  statusArea.textContent =
+                    'エラー: ' +
+                    (res && res.error ? res.error : '不明なエラー');
+                }
+              })
+              .withFailureHandler(function (err) {
+                statusArea.textContent =
+                  'エラー: ' + (err && err.message ? err.message : String(err));
+              })
+              .createEventsOnCalendar(cal.id, JSON.stringify(parsed));
+          });
         })
         .getGoogleCalendars();
     });
