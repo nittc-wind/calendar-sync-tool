@@ -15,7 +15,7 @@ export function getGoogleCalendars() {
 
 /**
  * 指定カレンダーにイベントを作成
- * items は JSON で受け取った配列を想定
+ * items は既に convertArrayToCalendarEventResources で変換済みの配列を想定
  */
 export function createEventsOnCalendar(calendarId: string, itemsJson: string) {
   try {
@@ -38,9 +38,10 @@ export function createEventsOnCalendar(calendarId: string, itemsJson: string) {
       error?: string;
     }[] = [];
 
-    for (const it of items) {
+    for (const resource of items) {
       try {
-        const resource = convertToCalendarEventResource(it);
+        // 既に変換済みのデータなので、直接使用
+        console.log('イベント作成開始:', resource);
 
         // CalendarApp は ISO8601を直接は受け取らないため、Date に変換
         const start = resource.start.dateTime
@@ -58,22 +59,13 @@ export function createEventsOnCalendar(calendarId: string, itemsJson: string) {
           });
         } else {
           // 終日扱い（開始・終了同一日）
-          // it.date は 'YYYY-MM-DD' も来る想定のため安全に処理
+          // 日付文字列からDateを作成
           let d: Date;
-          if (typeof it.date === 'number') {
-            d = new Date(it.date * 1000);
-          } else if (typeof it.date === 'string') {
-            const parts = it.date.split('-');
-            if (parts.length === 3) {
-              const y = parseInt(parts[0], 10);
-              const m = parseInt(parts[1], 10) - 1;
-              const day = parseInt(parts[2], 10);
-              d = new Date(Date.UTC(y, m, day));
-            } else {
-              d = new Date(NaN);
-            }
+          if (resource.start.dateTime) {
+            d = new Date(resource.start.dateTime);
           } else {
-            d = new Date(NaN);
+            // デフォルト日付（今日）
+            d = new Date();
           }
           event = cal.createAllDayEvent(resource.summary || '', d, {
             description: resource.description,
@@ -81,11 +73,12 @@ export function createEventsOnCalendar(calendarId: string, itemsJson: string) {
           });
         }
 
+        // 日付文字列を取得（ISO文字列から日付部分のみ抽出）
         const dateStr = ((): string => {
-          if (typeof it.date === 'number')
-            return new Date(it.date * 1000).toISOString().slice(0, 10);
-          if (typeof it.date === 'string') return it.date;
-          return '';
+          if (resource.start.dateTime) {
+            return new Date(resource.start.dateTime).toISOString().slice(0, 10);
+          }
+          return new Date().toISOString().slice(0, 10);
         })();
 
         created.push({
@@ -96,15 +89,15 @@ export function createEventsOnCalendar(calendarId: string, itemsJson: string) {
         });
       } catch (e) {
         const dateStr = ((): string => {
-          if (typeof it?.date === 'number')
-            return new Date(it.date * 1000).toISOString().slice(0, 10);
-          if (typeof it?.date === 'string') return it.date;
+          if (resource.start?.dateTime) {
+            return new Date(resource.start.dateTime).toISOString().slice(0, 10);
+          }
           return '';
         })();
 
         created.push({
           date: dateStr,
-          title: it?.summary || '部活',
+          title: resource.summary || '',
           status: 'failed',
           error: e instanceof Error ? e.message : String(e),
         });
