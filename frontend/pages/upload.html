@@ -96,14 +96,7 @@
               sheetIdText.value = id;
               sheetIdArea.style.display = 'block';
               fileInputBtn.style.display = "inline-block";
-              sessionStorage.setItem("spreadsheetId",id);
               console.log("id格納",id);
-              setTimeout(()=>{
-
-                switchPage('preview');
-                console.log("画面遷移した")
-                google.script.history.push(null,{page: 'preview'})
-              },1000); 
             })
             .withFailureHandler(function (err) {
               loading.style.display = 'none';
@@ -114,6 +107,11 @@
               fileName: file.name,
               mimeType: file.type
             });
+            const userProperties = PropertiesService.getUserProperties();
+            userProperties.setProperty('sessionID',id);
+            switchPage('preview');
+            console.log("画面遷移した")
+            google.script.history.push(null,{page: 'preview'})
         };
         reader.readAsDataURL(file);
       });

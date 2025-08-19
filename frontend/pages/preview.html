@@ -12,7 +12,7 @@
             </div>
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
-                    const sheetId = sessionStorage.getItem("spreadsheetId");
+                    const sheetId = scriptProperties.getProperties();
                     const errorDiv = document.getElementById('error');
                     const tableDiv = document.getElementById('jsonTable')
                     errorDiv.innerText = '';

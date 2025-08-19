@@ -3,6 +3,7 @@
  * GASから直接呼び出される関数
  */
 
+import { getSupportInfo, StringSupportOption } from 'prettier';
 import { convertSpreadsheetToJson, getSpreadsheetInfo } from './converters/spreadsheet-to-json.js';
 import { getGoogleCalendars } from './webapp/google-calendar-api.js';
 
@@ -33,35 +34,36 @@ function testFunction(): string {
   return 'Hello from GAS!';
 }
 
-
-let progressMessage = '';
-function getProcessingProgress():string{
-  return progressMessage;
-}
-
 /**
  * フロントからファイルを受け取り、Driveに一時保存→Spreadsheet変換
  */
 function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: string }) {
   // DataURLからbase64を抽出
-  progressMessage = "データを取得中..."
   const base64 = form.dataUrl.split(',')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), form.mimeType, form.fileName);
   // 一時的にDriveへ保存
-  const tempFile = DriveApp.createFile(blob);
+  const tempFile = DriveApp.createFile(blob).setName(form.fileName);
   // Spreadsheetへ変換
-  const resource = {
+  const resource= {
     name: tempFile.getName(),
     mimeType: MimeType.GOOGLE_SHEETS,
-    parents: [{ id: DriveApp.getRootFolder().getId() }]
+    parents: [DriveApp.getRootFolder().getId()]
   };
   // Drive APIで変換
   // @ts-ignore
-  const file = Drive.Files.create(resource, tempFile.getBlob());
+  const file = Drive.Files.create(resource, tempFile.getBlob(),{
+    fields:'id'
+  });
   // 一時ファイル削除
   tempFile.setTrashed(true);
-  
- return file.id; // 変換後のSpreadsheetのID
+  console.log(file.id);
+  if(typeof file.id === "string"){
+      const fileID =file.id;
+      const scriptProperty=PropertiesService.getScriptProperties();
+      scriptProperty.setProperty('SHEETID',fileID);
+      return file.id; // 変換後のSpreadsheetのID
+  }
+
 }
 
 /**
@@ -69,7 +71,6 @@ function uploadExcelFile(form: { dataUrl: string, fileName: string, mimeType: st
  * フロントエンドから呼び出される
  */
 function convertSpreadsheetToJsonForFrontend(spreadsheetId: string, options?: any) {
-  progressMessage = 'ファイルを変換中...';
   try {
     const result = convertSpreadsheetToJson(spreadsheetId, options);
     
@@ -101,7 +102,6 @@ function convertSpreadsheetToJsonForFrontend(spreadsheetId: string, options?: an
  */
 function getSpreadsheetInfoForFrontend(spreadsheetId: string) {
   try {
-    progressMessage = '処理が完了しました!'
     const result = getSpreadsheetInfo(spreadsheetId);
     return result;
   } catch (error) {
