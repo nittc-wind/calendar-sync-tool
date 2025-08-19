@@ -25,10 +25,11 @@ export interface CalendarEventResource {
 
 const DEFAULT_TIME_ZONE = 'Asia/Tokyo';
 
-// "HH:mm～HH:mm" を [startMs, endMs] に変換（1日の中でのミリ秒）
-function divideTimeMs(stringTime?: string): [number, number] {
-  if (!stringTime) return [Number.NaN, Number.NaN];
-  // 許容する区切り: 全角チルダ、波ダッシュ、半角~、ハイフン
+// "HH:mm～HH:mm" を [startH, startM, endH, endM] に変換
+function parseTimeHM(
+  stringTime?: string
+): [number, number, number, number] | null {
+  if (!stringTime) return null;
   const sep = stringTime.includes('～')
     ? '～'
     : stringTime.includes('〜')
@@ -39,43 +40,28 @@ function divideTimeMs(stringTime?: string): [number, number] {
           ? '-'
           : '～';
   const [start, end] = stringTime.split(sep).map(s => s.trim());
-  if (!start || !end) return [Number.NaN, Number.NaN];
-  const [startH, startM] = start.split(':').map(v => parseInt(v, 10));
-  const [endH, endM] = end.split(':').map(v => parseInt(v, 10));
-  const startMs = (startH * 3600 + startM * 60) * 1000;
-  const endMs = (endH * 3600 + endM * 60) * 1000;
-  return [startMs, endMs];
+  if (!start || !end) return null;
+  const [sh, sm] = start.split(':').map(v => parseInt(v, 10));
+  const [eh, em] = end.split(':').map(v => parseInt(v, 10));
+  if ([sh, sm, eh, em].some(v => Number.isNaN(v))) return null;
+  return [sh, sm, eh, em];
 }
 
-// UNIX秒 date と [startMs, endMs] から ISO8601 UTC 文字列を作成
-function makeIsoDateTimes(
-  dateUnixSec: number,
-  startMs: number,
-  endMs: number
-): [string, string] {
-  const timeDiffJST = 9 * 60 * 60 * 1000; // JST と UTC のオフセット
-  const isoStrStart = new Date(
-    dateUnixSec * 1000 + startMs - timeDiffJST
-  ).toISOString();
-  const isoStrEnd = new Date(
-    dateUnixSec * 1000 + endMs - timeDiffJST
-  ).toISOString();
-  return [isoStrStart, isoStrEnd];
-}
-
-// date が number(UNIX秒, JST基準) か 'YYYY-MM-DD' 文字列かを吸収して UNIX秒(JST基準) にする
-function normalizeDateToUnixJst(date: number | string): number | null {
-  if (typeof date === 'number' && Number.isFinite(date)) return date;
+// date が number(UNIX秒) か 'YYYY-MM-DD' を吸収して JST の (y,m,d) を返す
+function extractYMDinJst(
+  date: number | string
+): { y: number; m: number; d: number } | null {
+  if (typeof date === 'number' && Number.isFinite(date)) {
+    const dt = new Date(date * 1000); // GASのタイムゾーン(Asia/Tokyo)で解釈
+    return { y: dt.getFullYear(), m: dt.getMonth(), d: dt.getDate() };
+  }
   if (typeof date === 'string') {
     const m = date.trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
     if (m) {
       const y = parseInt(m[1], 10);
       const mo = parseInt(m[2], 10) - 1;
       const d = parseInt(m[3], 10);
-      // UTCの00:00にJST(9h)を加算 → JSTの00:00のタイムスタンプ(秒)
-      const timeDiffJST = 9 * 60 * 60 * 1000;
-      const unixMsJstMidnight = Date.UTC(y, mo, d) + timeDiffJST;
-      return Math.floor(unixMsJstMidnight / 1000);
+      return { y, m: mo, d };
     }
   }
   return null;
@@ -88,70 +74,75 @@ export function convertToCalendarEventResource(
 
   // data_row配列の場合は、インデックスを正しくマッピング
   let mappedItem: RawScheduleItem;
-  if ('data_row' in item && Array.isArray(item.data_row)) {
-    const row = item.data_row;
+  if ('data_row' in item && Array.isArray((item as any).data_row)) {
+    const row = (item as any).data_row as Array<string | number>;
     mappedItem = {
-      date: row[0], // 日付（UNIX秒）
-      time: String(row[4]), // 時刻（5番目の要素）
-      location: String(row[6]), // 場所（7番目の要素）
-      detail: String(row[7]), // 詳細（8番目の要素）
-      remark: String(row[8]), // 備考（9番目の要素）
-      summary: String(row[1]), // タイトル（2番目の要素）
+      date: row[0],
+      time: String(row[4]),
+      location: String(row[6]),
+      detail: String(row[7]),
+      remark: String(row[8]),
+      summary: String(row[1]),
     };
     console.log('data_row配列をマッピング:', mappedItem);
   } else {
     mappedItem = item;
   }
 
-  const [startMs, endMs] = divideTimeMs(mappedItem.time);
-  console.log('時刻解析結果 - startMs:', startMs, 'endMs:', endMs);
+  const ymd = extractYMDinJst(mappedItem.date);
+  console.log('JST日付抽出結果:', ymd);
 
-  let startIso: string | null;
-  let endIso: string | null;
+  const hm = parseTimeHM(mappedItem.time);
+  console.log('時刻解析結果(HM):', hm);
 
-  const unixJst = normalizeDateToUnixJst(mappedItem.date);
-  console.log('日付正規化結果 - unixJst:', unixJst);
+  let startDate: Date;
+  let endDate: Date;
 
-  if (Number.isNaN(startMs + endMs)) {
-    // time が不正 or 空 → 終日扱いに近い形で同一ISO（UTC日付の00:00）を入れる
-    console.log('時刻が不正または空 - 終日扱い');
-    if (unixJst !== null) {
-      const same = new Date(unixJst * 1000).toISOString();
-      console.log('終日用ISO文字列:', same);
-      startIso = same;
-      endIso = same;
+  if (!ymd) {
+    // 不正な日付 → 今日の日付を採用
+    const today = new Date();
+    if (hm) {
+      startDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hm[0],
+        hm[1],
+        0
+      );
+      endDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hm[2],
+        hm[3],
+        0
+      );
     } else {
-      console.log('日付が不正 - デフォルト日付を使用');
-      // 今日の日付をデフォルトとして使用
-      const today = new Date();
-      const defaultDate = new Date(
+      startDate = new Date(
         today.getFullYear(),
         today.getMonth(),
         today.getDate()
-      ).toISOString();
-      startIso = defaultDate;
-      endIso = defaultDate;
+      );
+      endDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
     }
   } else {
-    if (unixJst === null) {
-      // 不正な date
-      console.log('日付が不正 - デフォルト日付を使用');
-      const today = new Date();
-      const defaultDate = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-      ).toISOString();
-      startIso = defaultDate;
-      endIso = defaultDate;
+    if (hm) {
+      startDate = new Date(ymd.y, ymd.m, ymd.d, hm[0], hm[1], 0);
+      endDate = new Date(ymd.y, ymd.m, ymd.d, hm[2], hm[3], 0);
     } else {
-      console.log('時刻あり - ISO文字列生成開始');
-      const [s, e] = makeIsoDateTimes(unixJst, startMs, endMs);
-      startIso = s;
-      endIso = e;
-      console.log('生成されたISO文字列 - start:', startIso, 'end:', endIso);
+      startDate = new Date(ymd.y, ymd.m, ymd.d);
+      endDate = new Date(ymd.y, ymd.m, ymd.d);
     }
   }
+
+  const startIso = startDate.toISOString();
+  const endIso = endDate.toISOString();
+  console.log('生成ISO:', { startIso, endIso });
 
   const summary = '部活';
   const location = mappedItem.location ?? '';
@@ -163,7 +154,7 @@ export function convertToCalendarEventResource(
     description,
     start: { dateTime: startIso, timeZone: DEFAULT_TIME_ZONE },
     end: { dateTime: endIso, timeZone: DEFAULT_TIME_ZONE },
-    colorId: 6, // orange
+    colorId: 6,
   };
 
   console.log('変換完了 - 結果:', result);
