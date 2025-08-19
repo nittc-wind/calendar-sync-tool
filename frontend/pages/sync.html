@@ -16,6 +16,17 @@
         <select id="calendar-select"></select>
       </div>
       <div id="calendar-info"></div>
+
+      <div class="json-input" style="margin-top: 16px">
+        <label for="json-textarea">予定表JSON:</label>
+        <textarea id="json-textarea" rows="10" style="width: 100%"></textarea>
+      </div>
+
+      <div class="actions" style="margin-top: 12px">
+        <button id="apply-button" disabled>反映</button>
+      </div>
+
+      <div id="status-area" style="margin-top: 12px"></div>
     </div>
   </div>
 
@@ -25,6 +36,9 @@
         .withSuccessHandler(function (calendars) {
           const select = document.getElementById('calendar-select');
           const info = document.getElementById('calendar-info');
+          const textarea = document.getElementById('json-textarea');
+          const applyButton = document.getElementById('apply-button');
+          const statusArea = document.getElementById('status-area');
           if (select && calendars) {
             // optionを追加
             select.innerHTML = calendars
@@ -35,6 +49,7 @@
             // 選択変更時
             select.addEventListener('change', function () {
               showInfo(this.value);
+              updateApplyState();
             });
           }
           function showInfo(idx) {
@@ -47,6 +62,111 @@
                 </div>
               `;
           }
+
+          function updateApplyState() {
+            const hasCalendar = select && select.value !== undefined;
+            const hasText = textarea && textarea.value.trim().length > 0;
+            applyButton.disabled = !(hasCalendar && hasText);
+          }
+
+          textarea.addEventListener('input', updateApplyState);
+
+          applyButton.addEventListener('click', function () {
+            console.log('反映ボタンがクリックされました');
+            const idx = parseInt(select.value, 10);
+            const cal = calendars[idx];
+            console.log('選択されたカレンダー:', cal);
+
+            let parsed;
+            try {
+              parsed = JSON.parse(textarea.value);
+              console.log('JSONパース成功:', parsed);
+            } catch (e) {
+              console.error('JSONパースエラー:', e);
+              statusArea.textContent = 'JSONの構文が不正です';
+              return;
+            }
+            statusArea.textContent = 'お待ちください...';
+
+            // convertArrayToCalendarEventResourceを使って変換
+            let convertedData;
+            try {
+              const items = Array.isArray(parsed) ? parsed : [parsed];
+              console.log('変換前のデータ:', items);
+              console.log(
+                'convertArrayToCalendarEventResourcesを呼び出します...'
+              );
+
+              // まず、関数が存在するかチェック
+              if (
+                typeof google.script.run
+                  .convertArrayToCalendarEventResources !== 'function'
+              ) {
+                console.error(
+                  'convertArrayToCalendarEventResources関数が見つかりません'
+                );
+                statusArea.textContent = 'エラー: 変換関数が見つかりません';
+                return;
+              }
+
+              console.log('関数の存在確認完了');
+
+              convertedData = google.script.run
+                .withSuccessHandler(function (converted) {
+                  console.log('変換成功！変換後のデータ:', converted);
+
+                  // 変換が完了したら、変換済みデータをAPIに渡す
+                  google.script.run
+                    .withSuccessHandler(function (res) {
+                      if (res && res.success) {
+                        const rows = (res.data || []).map(
+                          r =>
+                            `${r.date} ${r.title}: ${r.status}${r.error ? ' (' + r.error + ')' : ''}`
+                        );
+                        statusArea.textContent = '反映完了\n' + rows.join('\n');
+                      } else {
+                        statusArea.textContent =
+                          'エラー: ' +
+                          (res && res.error ? res.error : '不明なエラー');
+                      }
+                    })
+                    .withFailureHandler(function (err) {
+                      statusArea.textContent =
+                        'エラー: ' +
+                        (err && err.message ? err.message : String(err));
+                    })
+                    .createEventsOnCalendar(cal.id, JSON.stringify(converted));
+                })
+                .withFailureHandler(function (convErr) {
+                  console.error('変換エラーの詳細:', convErr);
+                  console.error('エラーの型:', typeof convErr);
+                  console.error(
+                    'エラーのプロパティ:',
+                    Object.getOwnPropertyNames(convErr)
+                  );
+                  console.error('エラーメッセージ:', convErr.message);
+                  console.error('エラー名:', convErr.name);
+                  console.error('エラー行:', convErr.line);
+                  console.error('エラー列:', convErr.column);
+                  console.error('エラーソース:', convErr.sourceURL);
+                  console.error('エラースタック:', convErr.stack);
+                  statusArea.textContent =
+                    '変換エラー: ' +
+                    (convErr instanceof Error
+                      ? convErr.message
+                      : String(convErr));
+                })
+                .convertArrayToCalendarEventResources(items);
+
+              console.log('convertArrayToCalendarEventResources呼び出し完了');
+            } catch (convErr) {
+              console.error('変換処理の例外:', convErr);
+              statusArea.textContent =
+                '変換エラー: ' +
+                (convErr instanceof Error ? convErr.message : String(convErr));
+              return;
+            }
+          });
         })
         .getGoogleCalendars();
     });

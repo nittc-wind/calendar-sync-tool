@@ -7,10 +7,19 @@ import {
   convertSpreadsheetToJson,
   getSpreadsheetInfo,
 } from './converters/spreadsheet-to-json.js';
-import { getGoogleCalendars } from './webapp/google-calendar-api.js';
+import {
+  getGoogleCalendars,
+  createEventsOnCalendar,
+} from './webapp/google-calendar-api.js';
+import { convertArrayToCalendarEventResources } from './converters/json-to-calendar-event.js';
 
 // @ts-ignore
 globalThis.getGoogleCalendars = getGoogleCalendars;
+// @ts-ignore
+globalThis.createEventsOnCalendar = createEventsOnCalendar;
+// @ts-ignore
+globalThis.convertArrayToCalendarEventResources =
+  convertArrayToCalendarEventResources;
 
 function doGet(): GoogleAppsScript.HTML.HtmlOutput {
   const htmlOutput = HtmlService.createTemplateFromFile('index');
